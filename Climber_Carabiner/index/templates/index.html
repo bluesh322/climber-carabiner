@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block pagestyles %}
+    {% assets "index_css_bundle" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css">
+    {% endassets %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ title }} | Let's do it</h1>
+        <h2> {{ subtitle }}</h2>
+        
+        <p>Please!</p>
+
+    </div>
+{% endblock %}
