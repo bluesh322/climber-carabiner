@@ -57,6 +57,6 @@ typed-ast==1.4.1
 urllib3==1.25.9
 wcwidth==0.1.7
 webassets==2.0
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 wrapt==1.12.1
 WTForms==2.2.1
