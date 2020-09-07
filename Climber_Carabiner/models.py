@@ -36,3 +36,22 @@ class User(db.Model):
         nullable=False,
         unique=True,
     )
+
+class Route(db.Model):
+    """Route"""
+    def __repr__(self):
+        """Show informatoin about a route"""
+        r = self
+        return f'<Route {r.id}, {r.name}>'
+
+        __tablename__ = "users"
+
+        id = db.Column(
+        db.Integer,
+        primary_key=True,
+        autoincrement=True
+        )
+        name = db.Column(
+        db.Text,
+        nullable=False
+        )

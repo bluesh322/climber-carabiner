@@ -19,7 +19,7 @@ def create_app():
 
         # Register Blueprints
         app.register_blueprint(index.index_bp)
-        app.register_blueprint(api_test.api_test_bp)
+        app.register_blueprint(api_test.api_test_bp, url_prefix='/api')
 
 
         # Compile static assets

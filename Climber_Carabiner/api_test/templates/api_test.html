@@ -10,9 +10,9 @@
     <div class="container">
         <h1>{{ title }} | Let's do it</h1>
         <h2> {{ subtitle }}</h2>
-        
-        <p id="res">{{res.name}}</p>
-
+        {% for route in res['name'] %}
+        <p id="res">{{route}} </p>
+        {% endfor %}
     </div>
 
     <script src="https://unpkg.com/axios/dist/axios.js"></script>
