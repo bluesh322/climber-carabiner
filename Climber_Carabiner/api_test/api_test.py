@@ -12,7 +12,7 @@ api_test_bp = Blueprint(
 )
 
 BASE_URL = 'https://www.mountainproject.com/data/'
-SECRET_KEY = '200823179-177c2b038a6445e25f63f44a8c14588e' #Also should not put this on github
+SECRET_KEY = '' #Also should not put this on github
 
 # --------------------------- User Routes ----------------------------------------
 

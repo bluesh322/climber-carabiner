@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, flash, redirect, session
 from flask import current_app as app
+
+from Climber_Carabiner.models import db, User, Route
+sess = db.session
 
 # Blueprint configuration
 index_bp = Blueprint(
@@ -14,7 +17,7 @@ def index():
     """Homepage."""
     return render_template(
         'index.html',
-        title='Climber Carabiner',
-        subtitle='Connect to climbers',
         template='index-template')
+
+
 
