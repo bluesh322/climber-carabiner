@@ -2,10 +2,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 from flask import current_app as app
 from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, UserMixin
 
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
+login_manager = LoginManager()
 
 def connect_db(app):
     db.app = app
@@ -13,12 +15,12 @@ def connect_db(app):
 
 # Models go below
 
-class User(db.Model):
-    """User"""
+class User(UserMixin, db.Model):
+    """User - UserMixin gives access to is_active, is_authenticated, is_anonymous, and get_id"""
     def __repr__(self):
         """Show info about a user"""
         u = self
-        return f"<User {u.id} {u.name}>"
+        return f"<User {u.id}, {u.username}, {u.email}>"
 
     __tablename__ = "users"
 
@@ -27,18 +29,26 @@ class User(db.Model):
         primary_key=True,
         autoincrement=True
     )
-    name = db.Column(
+    username = db.Column(
         db.Text,
         nullable=False
     )
     password = db.Column(
         db.Text,
-        nullable=False
+        #nullable=False
     )
     email = db.Column(
         db.Text,
         nullable=False,
         unique=True,
+    )
+    first_name = db.Column(
+        db.Text,
+        nullable=True
+    )
+    last_name = db.Column(
+        db.Text,
+        nullable=True
     )
     image_url = db.Column(
         db.Text,
@@ -75,14 +85,53 @@ class User(db.Model):
         nullable=True
     )
 
+    #Class Methods for Authenticating a User
+    @classmethod
+    def signup(cls, username, email, password):
+        """Sign up user.
+
+        Hashes password and adds user to system.
+        """
+
+        hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        user = User(
+            username=username,
+            email=email,
+            password=hashed_pwd
+        )
+
+        db.session.add(user)
+        return user
+
+    @classmethod
+    def authenticate(cls, email, password):
+        """Find user with `username` and `password`.
+
+        This is a class method (call it on the class, not an individual user.)
+        It searches for a user whose password hash matches this password
+        and, if it finds such a user, returns that user object.
+
+        If can't find matching user (or if password is wrong), returns False.
+        """
+
+        user = cls.query.filter_by(email=email).first()
+
+        if user:
+            is_auth = bcrypt.check_password_hash(user.password, password)
+            if is_auth:
+                return user
+
+        return False
+
 class Route(db.Model):
     """Route"""
     def __repr__(self):
-        """Show informatoin about a route"""
+        """Show information about a route"""
         r = self
         return f'<Route {r.id}, {r.name}>'
 
-        __tablename__ = "routes"
+    __tablename__ = "routes"
 
     id = db.Column(
         db.Integer,
@@ -149,6 +198,7 @@ class Sends(db.Model):
         return f"<Send {s.user_being_followed_id} {s.user_following_id}>"
 
     __tablename__ = 'sends'
+
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -161,7 +211,7 @@ class Sends(db.Model):
 
     route_id = db.Column(
         db.Integer,
-        db.ForeignKey('routes.id', ondelete="cascade"),
+        db.ForeignKey('routes.id', ondelete="cascade")
     )
 
     attempts = db.Column(

@@ -2,11 +2,13 @@
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_assets import Environment
+from flask_login import LoginManager
 from .assets import compile_assets
-from .models import connect_db
+from .models import connect_db, User
 import os
 
 assets = Environment()
+
 
 def create_app():
     """Create Flask Application"""
@@ -24,17 +26,27 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
     toolbar = DebugToolbarExtension(app)
 
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth_bp.login'
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
     assets.init_app(app)
+    connect_db(app)
 
     with app.app_context():
         #Import parts of our application
         from .index import index
         from .api_test import api_test
+        from .auth import auth
 
         # Register Blueprints
         app.register_blueprint(index.index_bp)
         app.register_blueprint(api_test.api_test_bp, url_prefix='/api')
-
+        app.register_blueprint(auth.auth_bp)
 
         # Compile static assets
         compile_assets(assets)
