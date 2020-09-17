@@ -21,3 +21,10 @@ class Config:
     COMPRESSOR_DEBUG = 'True'
 
     # API - Mountain Project
+
+    # Mail Server
+    MAIL_SERVER='smtp.googlemail.com'
+    MAIL_USERNAME='bluesh322@gmail.com'
+    MAIL_PASSWORD=environ.get('MAIL_PASSWORD')
+    MAIL_PORT=465
+    MAIL_USE_SSL=True

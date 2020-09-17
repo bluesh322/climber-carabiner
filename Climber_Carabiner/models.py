@@ -84,6 +84,16 @@ class User(UserMixin, db.Model):
         db.Text,
         nullable=True
     )
+    #Email confirmation
+    confirmed = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False
+    )
+    confirmed_on = db.Column(
+        db.DateTime, 
+        nullable=True
+    )
 
     #Class Methods for Authenticating a User
     @classmethod
