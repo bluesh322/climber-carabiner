@@ -16,30 +16,30 @@ def create_app():
     app = Flask(__name__, instance_relative_config=False)
 
     # config app with things i'd normally put in app.py
-    app.config.from_object('config.Config')
-    app.config['SQLALCHEMY_DATABASE_URI'] = (
-        os.environ.get('DATABASE_URL', 'postgres:///carabiner'))
+    app.config.from_object("config.Config")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+        "DATABASE_URL", "postgres:///carabiner"
+    )
 
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_ECHO'] = True
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SQLALCHEMY_ECHO"] = True
+    app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "it's a secret")
     toolbar = DebugToolbarExtension(app)
 
     # Flask-Login init
     login_manager = LoginManager()
-    login_manager.login_view = 'auth_bp.login'
+    login_manager.login_view = "auth_bp.login"
     login_manager.init_app(app)
 
     # Mail init
     mail = Mail()
     mail.init_app(app)
 
-
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
-    
+
     # Assets init
     assets.init_app(app)
 
@@ -47,21 +47,25 @@ def create_app():
     connect_db(app)
 
     with app.app_context():
-        #Import parts of our application
+        # Import parts of our application
         from .index import index
         from .api_test import api_test
         from .auth import auth
+        from .user_views import user_views
+        from .search_views import search_views
 
         # Register Blueprints
         app.register_blueprint(index.index_bp)
-        app.register_blueprint(api_test.api_test_bp, url_prefix='/api')
+        app.register_blueprint(api_test.api_test_bp, url_prefix="/api")
         app.register_blueprint(auth.auth_bp)
+        app.register_blueprint(user_views.user_views)
+        app.register_blueprint(search_views.search_views)
 
         # Compile static assets
         compile_assets(assets)
 
         return app
-    
+
     # Error Handlers
     @app.errorhandler(404)
     def page_not_found(error):

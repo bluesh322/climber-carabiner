@@ -12,7 +12,13 @@ def compile_assets(assets):
         output='dist/css/index.css',
         extra={'rel':'stylesheet/css'}
     )
+    user_views_css_bundle = Bundle(
+        'user_views/user_views.css',
+        output='gen/user_views.css',
+        extra={'rel':'stylesheet/css'}
+    )
     assets.register('index_css_bundle', index_css_bundle)
+    assets.register('user_views_css_bundle', user_views_css_bundle)
     if app.config['FLASK_ENV'] == 'development':
         index_css_bundle.build()
     return assets

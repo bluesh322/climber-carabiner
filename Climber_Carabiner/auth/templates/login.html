@@ -1,36 +1,28 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block scripts %} {% endblock %} {% block content %}
 <div class="column is-4 is-offset-4">
-    <h3 class="title">Login</h3>
-    <div class="box">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="notification is-danger">
-                {{ messages[0] }}
-            </div>
-        {% endif %}
-        {% endwith %}
-        <form method="POST" action="/login">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Your Password">
-                </div>
-            </div>
-            <div class="field">
-                <label class="checkbox">
-                    <input type="checkbox">
-                    Remember me
-                </label>
-            </div>
-            <button class="button is-block is-info is-large is-fullwidth">Login</button>
+  <h3 class="title">Login</h3>
+  {% with messages = get_flashed_messages() %} {% if messages %}
+  <div class="notification is-danger">{{ messages[0] }}</div>
+  {% endif %} {% endwith %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <form action="/login" method="POST">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Your Email *" value="" />
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" placeholder="Your Password *" value="" />
+          </div>
+          <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Login" />
+          </div>
+          <div class="form-group">
+            <a href="#" class="ForgetPwd" value="Login">Forget Password?</a>
+          </div>
         </form>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}

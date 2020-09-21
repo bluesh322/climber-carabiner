@@ -1,0 +1,85 @@
+{% extends "base.html" %} {% block scripts %} {% endblock %} {% block content %}
+<div class="row">
+    <div class="container">
+        <form action="/search/" method="POST">
+            <div class="form-group">
+                <label class="" for="searchType">Routes or Climbers Search:</label>
+                <select class="form-control col-4" name="searchType" id="searchType">
+                    <option value="User">Routes</option>
+                    <option value="Route">Climbers</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="form-control col-4" type="text" placeholder="Enter your search here" />
+            </div>
+            <button action="submit" class="btn btn-primary">Go!</button>
+            <hr />
+            <h3>Advanced:</h3>
+            <div class="form-inline my-2">
+                <div class="form-group">
+                    <label class="d-inline" for="location">Route Type: </label>
+                    <select name="searchDistance" id="searchDistance" class="form-control mx-2 col">
+                        <option value="Boulder">Boulder</option>
+                        <option value="Lead">Lead</option>
+                        <option value="Trad">Trad</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="location">Location: </label>
+                    <select name="searchLocation" id="searchLocation" class="form-control mx-2">
+                        <option value="here">Near You</option>
+                        <option value="somewhereelse">Somewhere Else</option>
+                        <option value="How do I do location search">
+                            How to location search
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="d-inline" for="location">Distance: </label>
+                    <select name="searchDistance" id="searchDistance" class="form-control mx-2">
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group my-4">
+                <label for="difficultyRange">Difficulty Range</label>
+                <input type="range" class="multi-range" id="diffRange" min="0" max="10" id="formControlRange" />
+                <!-- This requires MDB or some other bootstrap plugin that will make the multi select work 
+                        and will likely need to be custom made, can slap some selects together and make it work-->
+            </div>
+            <div class="form-inline">
+                <div class="form-group">
+                    <label for="diffRangeLower">Difficulty Range Low: </label>
+                    <select class="form-control col-2 mx-2" name="diffRangeLower" id="diffRangeSelLow">
+                        <option value="v0">V0</option>
+                        <option value="v1">V1</option>
+                        <option value="v2">V2</option>
+                        <option value="v3">V3</option>
+                        <option value="v4">V4</option>
+                        <option value="v5">V5</option>
+                        <option value="v6">V6</option>
+                        <option value="v7">V7</option>
+                        <option value="v8">V8+</option>
+                    </select>
+                    <label for="diffRangeUpper">Difficulty Range High: </label>
+                    <select class="form-control col-2 mx-2" name="diffRangeHigh" id="diffRangeSelHigh">
+                        <option value="v0">V0</option>
+                        <option value="v1">V1</option>
+                        <option value="v2">V2</option>
+                        <option value="v3">V3</option>
+                        <option value="v4">V4</option>
+                        <option value="v5">V5</option>
+                        <option value="v6">V6</option>
+                        <option value="v7">V7</option>
+                        <option value="v8">V8+</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block scripts %}
+{% endblock %}
+{% block content %}
+<div class="row">
+    <aside class="col-md-4 col-lg-3 col-sm-12" id="home-card">
+        <div class="card user-card">
+            <div class="image-wrapper">
+                <img src="#" alt="" class="card-hero">
+            </div>
+            <a href="" class="card-link">
+                <img src="" alt="">
+                <p>@someuser</p>
+        </div>
+        </a>
+        <ul class="user-stats nav nav-pills">
+            <li class="stat">
+                <p class="small">Somestat</p>
+                <h4>
+                    <a href="#">user.stat</a>
+                </h4>
+            </li>
+        </ul>
+    </aside>
+    <div class="col-lg-6 col-md-8 col-sm-12">
+        <ul class="list-group" id="messages">
+            <li>
+                <a href="#" class="message-link border-box"/>
+                <a href="#">
+                    Good Boy
+                    <img src="#" class="timeline-image" alt="">
+                </a>
+                <div class="message-area">
+                    <a href="/users/">@</a>
+                    <span class="text-muted"></span>
+                    <p></p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
