@@ -53,6 +53,7 @@ def create_app():
         from .auth import auth
         from .user_views import user_views
         from .search_views import search_views
+        from .route_views import route_views
 
         # Register Blueprints
         app.register_blueprint(index.index_bp)
@@ -60,6 +61,7 @@ def create_app():
         app.register_blueprint(auth.auth_bp)
         app.register_blueprint(user_views.user_views)
         app.register_blueprint(search_views.search_views)
+        app.register_blueprint(route_views.route_views)
 
         # Compile static assets
         compile_assets(assets)

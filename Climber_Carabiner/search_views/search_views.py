@@ -21,3 +21,11 @@ search_views = Blueprint(
 @search_views.route('/search')
 def show_search_form():
     return render_template('search.html')
+
+@search_views.route('/search/list_users')
+def list_users():
+    return render_template('list_users.html')
+
+@search_views.route('/search/list_routes')
+def list_routes():
+    return render_template('list_routes.html')
