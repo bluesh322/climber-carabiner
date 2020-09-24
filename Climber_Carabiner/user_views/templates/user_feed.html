@@ -1,43 +1,98 @@
-{% extends "base.html" %}
-{% block scripts %}
-{% endblock %}
-{% block content %}
-<div class="row">
-    <aside class="col-md-4 col-lg-3 col-sm-12" id="home-card">
-        <div class="card user-card">
-            <div class="image-wrapper">
-                <img src="#" alt="" class="card-hero">
-            </div>
-            <a href="" class="card-link">
-                <img src="" alt="">
-                <p>@someuser</p>
-        </div>
-        </a>
-        <ul class="user-stats nav nav-pills">
-            <li class="stat">
-                <p class="small">Somestat</p>
-                <h4>
-                    <a href="#">user.stat</a>
-                </h4>
-            </li>
-        </ul>
-    </aside>
-    <div class="col-lg-6 col-md-8 col-sm-12">
-        <ul class="list-group" id="messages">
-            <li>
-                <a href="#" class="message-link border-box"/>
-                <a href="#">
-                    Good Boy
-                    <img src="#" class="timeline-image" alt="">
-                </a>
-                <div class="message-area">
-                    <a href="/users/">@</a>
-                    <span class="text-muted"></span>
-                    <p></p>
-                </div>
-            </li>
-        </ul>
+{% extends "base.html" %} {% block scripts %} {% endblock %} {% block content %}
+<div class="row py-4">
+  <aside class="col-md-4 col-lg-3 col-sm-12" id="home-card">
+    <div class="card" style="width: 18rem">
+      <img src="..." class="card-img-top" alt="..." />
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">Current signed in user information will be here</p>
+      </div>
     </div>
+    <ul class="col py-5" style="list-style: none">
+      <li>
+        <div class="card" style="width: 18rem">
+          <img src="..." class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">Nearby User</h5>
+            <p class="card-text">
+              Recent sends
+            </p>
+            <a href="#" class="btn btn-primary my-1">Connect to user</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="card" style="width: 18rem">
+          <img src="..." class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">Nearby User</h5>
+            <p class="card-text">
+              Recent sends
+            </p>
+            <a href="#" class="btn btn-primary my-1">Connect to user</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </aside>
+  <div class="container col-lg-8 col-md-8 col-sm-12">
+    <ul style="list-style: none">
+      <li>
+        <div class="card" style="width: 45rem">
+          <img src="..." class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">Other User</h5>
+            <p class="card-text">
+              Other User your connected with recent update
+            </p>
+            <a href="#" class="btn btn-primary my-1">Route detail page</a>
+            <a href="#" class="btn btn-primary my-1">Give Props</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="card" style="width: 45rem">
+          <img src="..." class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">Nose Bleed</h5>
+            <p class="card-text">Some Route Details</p>
+            <a href="#" class="btn btn-primary">Link to route page</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="card" style="width: 45rem">
+          <img src="..." class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">Other User</h5>
+            <p class="card-text">
+              Other User your connected with recent update
+            </p>
+            <a href="#" class="btn btn-primary my-1">Route detail page</a>
+            <a href="#" class="btn btn-primary my-1">Give Props</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="card" style="width: 45rem">
+          <img src="..." class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">Nose Bleed</h5>
+            <p class="card-text">Some Route Details</p>
+            <a href="#" class="btn btn-primary">Link to route page</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <nav aria-label="Page navigation example" class="justify-content-center">
+    <ul class="pagination">
+      <li class="page-item"><a class="page-link" href="#">Previous - </a></li>
+      <li class="page-item"><a class="page-link" href="#">Next</a></li>
+    </ul>
+  </nav>
 </div>
 
 {% endblock %}

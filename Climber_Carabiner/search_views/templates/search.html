@@ -1,19 +1,24 @@
 {% extends "base.html" %} {% block scripts %} {% endblock %} {% block content %}
 <div class="row">
-    <div class="container">
+    <div class="col-4">
         <form action="/search/" method="POST">
-            <div class="form-group">
-                <label class="" for="searchType">Routes or Climbers Search:</label>
-                <select class="form-control col-4" name="searchType" id="searchType">
-                    <option value="User">Routes</option>
-                    <option value="Route">Climbers</option>
-                </select>
+            <div class="btn-group btn-group-toggle my-3" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                  <input type="radio" name="routes" id="option1" autocomplete="off" checked> Routes
+                </label>
+                <label class="btn btn-secondary">
+                  <input type="radio" name="climbers" id="option2" autocomplete="off"> Climbers
+                </label>
             </div>
             <div class="form-group">
-                <input class="form-control col-4" type="text" placeholder="Enter your search here" />
+                <input class="form-control col" type="text" placeholder="Enter your search here" />
             </div>
             <button action="submit" class="btn btn-primary">Go!</button>
-            <hr />
+
+        </form>
+    </div>
+    <div class="col-8">
+        <form action="/search">
             <h3>Advanced:</h3>
             <div class="form-inline my-2">
                 <div class="form-group">
@@ -25,7 +30,7 @@
                     </select>
                 </div>
             </div>
-            <div class="form-inline">
+            <div class="form-inline my-4">
                 <div class="form-group">
                     <label for="location">Location: </label>
                     <select name="searchLocation" id="searchLocation" class="form-control mx-2">
@@ -45,13 +50,7 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group my-4">
-                <label for="difficultyRange">Difficulty Range</label>
-                <input type="range" class="multi-range" id="diffRange" min="0" max="10" id="formControlRange" />
-                <!-- This requires MDB or some other bootstrap plugin that will make the multi select work 
-                        and will likely need to be custom made, can slap some selects together and make it work-->
-            </div>
-            <div class="form-inline">
+            <div class="form-inline my-4">
                 <div class="form-group">
                     <label for="diffRangeLower">Difficulty Range Low: </label>
                     <select class="form-control col-2 mx-2" name="diffRangeLower" id="diffRangeSelLow">
@@ -82,4 +81,5 @@
         </form>
     </div>
 </div>
+<hr />
 {% endblock %}

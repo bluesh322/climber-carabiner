@@ -1,23 +1,62 @@
-{% extends "base.html" %}
-{% block scripts %}
-{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block scripts %} {% endblock %} {% block content %}
 
 <div class="row">
-    <div class="container">
-        <div>
-        <img src="" alt="">
-        </div> 
-        <h1>Username</h1>
-        <h3>email:</h3><p>some email</p>
-        <h3>boulder skill level:</h3><p>v3</p>
-        <h3>top rope skill level:</h3><p>v5</p>
-        <h3>lead climbing skill level:</h3><p>v5</p>
-        <h3>Goals: </h3><p>Reimers Ranch Austin TX</p>
-        <a href="/user/edit-profile">
-        <button class="btn btn-primary">Edit</button>
-        </a>
+  <div class="container col-6">
+    <div>
+      <img src="" alt="" />
     </div>
+    <h1>Username</h1>
+    <h3>email:</h3>
+    <p>some email</p>
+    <h3>boulder skill level:</h3>
+    <p>v3</p>
+    <h3>top rope skill level:</h3>
+    <p>v5</p>
+    <h3>lead climbing skill level:</h3>
+    <p>v5</p>
+    <h3>Goals:</h3>
+    <p>Reimers Ranch Austin TX</p>
+    <a href="/user/edit-profile">
+      <button class="btn btn-primary">Edit</button>
+    </a>
+  </div>
+  <div class="container col-6">
+    <form action="/edit-goal-info" class="my-3">
+      <div class="form-group"> 
+        <label class="col-form-label-lg" for="exampleFormControlTextarea1">Goals</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">Current Goals</textarea>
+      </div>
+      <button action="submit" class="btn btn-primary">Save</button>
+    </form>
+    <label class="col-form-label-lg" for="exampleFormControlTextarea1">Projects</label>
+    <hr>
+    <ul style="list-style: none; padding-left: 0;">
+        <li>
+            <p>Some route</p>
+            <a href="#" class="btn btn-primary">Link to route</a>
+            <button class="btn btn-danger">X</button>
+        </li>
+        <li>
+            <p>Some route</p>
+            <a href="#" class="btn btn-primary">Link to route</a>
+            <button class="btn btn-danger">X</button>
+        </li>
+    </ul>
+    <label class="col-form-label-lg" for="exampleFormControlTextarea1">Sends</label>
+    <hr>
+    <ul style="list-style: none; padding-left: 0;">
+        <li>
+            <p>Some route</p>
+            <a href="#" class="btn btn-primary">Link to route</a>
+            <button class="btn btn-danger">X</button>
+        </li>
+        <li>
+            <p>Some route</p>
+            <a href="#" class="btn btn-primary">Link to route</a>
+            <button class="btn btn-danger">X</button>
+        </li>
+    </ul>
+  </div>
 </div>
 
 {% endblock %}
