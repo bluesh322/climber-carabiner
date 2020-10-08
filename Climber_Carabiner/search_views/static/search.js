@@ -67,5 +67,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   s.src =
-    "https://maps.googleapis.com/maps/api/js?key=AIzaSyD6-4pUz6JVVBNUivQ1kXWPMfkP04LqR0U";
+    "https://maps.googleapis.com/maps/api/js?key=";
 });

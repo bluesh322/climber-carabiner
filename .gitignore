@@ -3,3 +3,4 @@ __pycache__/
 .env
 Climber_Carabiner/static/.webassets-cache/
 Climber_Carabiner/static/gen
+Climber_Carabiner/search_views/static/.env
