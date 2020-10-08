@@ -6,8 +6,9 @@ from flask import (
     url_for,
     request,
     flash,
+    jsonify
 )
-from ..models import User, db
+from ..models import User, db, Route
 
 sess = db.session
 
@@ -18,9 +19,27 @@ search_views = Blueprint(
     static_folder="static"
 )
 
-@search_views.route('/search')
+@search_views.route('/search', methods=["GET", "POST"])
 def show_search_form():
     return render_template('search.html')
+
+@search_views.route('/update_map')
+def update_map():
+    lat = 30.2672
+    lon = -97.7431
+    routes = Route.get_routes_within_radius(lat, lon, 5)
+    all_routes = [route.serialize() for route in routes]
+    return jsonify(routes=all_routes)
+
+@search_views.route('/update_map', methods=["POST"])
+def update_map_on_bounds_change():
+    center = request.json['center']
+    lat = center['lat']
+    lon = center['lng']
+    routes = Route.get_routes_within_radius(lat, lon, 20)
+    all_routes =  [route.serialize() for route in routes]
+    return jsonify(routes=all_routes)
+
 
 @search_views.route('/search/list_users')
 def list_users():

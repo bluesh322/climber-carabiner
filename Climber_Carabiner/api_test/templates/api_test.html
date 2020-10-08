@@ -10,9 +10,9 @@
     <div class="container">
         <h1>{{ title }} | Let's do it</h1>
         <h2> {{ subtitle }}</h2>
-        {% for route in res['name'] %}
-        <p id="res">{{route}} </p>
-        {% endfor %}
+        <h3>Route Name:</h3><p>{{ res['name'] }}</p>
+        <h3>Route lat:</h3><p>{{ res['latitude'] }}</p>
+        <h3>Route long:</h3><p>{{ res['longitude'] }}</p>
     </div>
 
     <script src="https://unpkg.com/axios/dist/axios.js"></script>

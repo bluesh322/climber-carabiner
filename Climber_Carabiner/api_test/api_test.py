@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, flash, jsonify, session
 from flask import current_app as app
+from ..models import Route, db
 import requests, json
 import os
 
@@ -11,8 +12,10 @@ api_test_bp = Blueprint(
     static_folder='static'
 )
 
+sess = db.session
+
 BASE_URL = 'https://www.mountainproject.com/data/'
-SECRET_KEY = '' #Also should not put this on github
+MP_KEY = os.environ.get('MP_KEY') #Also should not put this on github
 
 # --------------------------- User Routes ----------------------------------------
 
@@ -20,7 +23,7 @@ SECRET_KEY = '' #Also should not put this on github
 def list_user():
     """email or userId return the user and some info"""
     email = 'bluesh322@gmail.com' #using constants atm not for github
-    user = requests.get(f'{BASE_URL}get-user?email={email}&key={SECRET_KEY}')
+    user = requests.get(f'{BASE_URL}get-user?email={email}&key={MP_KEY}')
     user_res = json.loads(user.text)
 
     res = {}
@@ -46,7 +49,7 @@ def delete_user():
 def list_ticks():
     """email or userId return most recent ticks from user, optional - start pos"""
     email = 'bluesh322@gmail.com'
-    tick = requests.get(f'{BASE_URL}get-ticks?email={email}&key={SECRET_KEY}')
+    tick = requests.get(f'{BASE_URL}get-ticks?email={email}&key={MP_KEY}')
     tick_res = json.loads(tick.text)
     res = {}
     res.update({"hardest": tick_res['hardest']})
@@ -62,7 +65,7 @@ def list_ticks():
 def list_todos():
     """email or userId return most recent todos from user, optional - start pos"""
     email = 'bluesh322@gmail.com'
-    todos = requests.get(f'{BASE_URL}get-to-dos?email={email}&key={SECRET_KEY}')
+    todos = requests.get(f'{BASE_URL}get-to-dos?email={email}&key={MP_KEY}')
     todos_res = json.loads(todos.text)
     res = {}
     res.update({"todos": todos_res['toDos']})
@@ -78,14 +81,19 @@ def list_todos():
 @api_test_bp.route('/getRoutes')
 def list_routes():
     """routeId,... key: return routes based on id"""
-    routes = requests.get(f'{BASE_URL}get-routes?routeIds=105748391,105750454,105749956&key={SECRET_KEY}')
+    routes = requests.get(f'{BASE_URL}get-routes?routeIds=107981634&key={MP_KEY}')
     routes_res = json.loads(routes.text)
     res = {}
     k = []
+    print(routes_res)
     routes = routes_res['routes']
     for route in routes:
         k.append(route['name'])
-    res.update({'name': k})
+        k.append(route['longitude'])
+        k.append(route['latitude'])
+    res.update({'name': k[0]})
+    res.update({'longitude': k[1]})
+    res.update({'latitude': k[2]})
 
     return render_template(
     'api_test.html',
@@ -97,22 +105,21 @@ def list_routes():
 @api_test_bp.route('/getRoutesForLatLon')
 def list_routes_lat_lon():
     """"""
-    #coordinates for Denton TX
-    lat = '33.2148'
-    lon = '-97.1331'
-    maxDist = '200'
-    maxresults = '50'
-    mindifficulty = 'V3'
-    maxdifficulty = 'V8'
-    routes_res = requests.get(f'{BASE_URL}get-routes-for-lat-lon?lat={lat}&lon={lon}&maxDistance={maxDist}&maxResults={maxresults}&minDiff={mindifficulty}&maxDiff={maxdifficulty}&key={SECRET_KEY}')
+    #coordinates for Austin TX
+    lat = '39.7392'
+    lon = '-104.9903'
+    maxDist = '100'
+    maxresults = '500'
+    routes_res = requests.get(f'{BASE_URL}get-routes-for-lat-lon?lat={lat}&lon={lon}&maxDistance={maxDist}&maxResults={maxresults}&key={MP_KEY}')
     routes = json.loads(routes_res.text)
     routes_t = routes['routes']
-    k = []
+    k = {}
+    i = 0
     for route in routes_t:
-        k.append(route['name'])
-    print(k)
-    res = {}
-    res.update({'name': k})
+        Route.add_route(name=route['name'], difficulty=route['rating'], image_url=route['imgSqSmall'], lat=route['latitude'], lon=route['longitude'], route_type=route['type'])
+        k.update(i = route['name'])
+        ++i
+    res = k
 
     return render_template(
     'api_test.html',

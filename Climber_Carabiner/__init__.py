@@ -24,7 +24,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SQLALCHEMY_ECHO"] = True
     app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "it's a secret")
+    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
     toolbar = DebugToolbarExtension(app)
 
     # Flask-Login init
@@ -41,6 +41,7 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Assets init
+    assets = Environment()
     assets.init_app(app)
 
     # DB init

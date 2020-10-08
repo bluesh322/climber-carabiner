@@ -12,7 +12,6 @@ class Config:
     FLASK_APP = "wsgi.py"
 
     # Flask-Assets
-    LESS_BIN = "/usr/local/bin/lessc"
     ASSETS_DEBUG = True
     ASSETS_AUTO_BUILD = True
 

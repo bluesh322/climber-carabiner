@@ -1,3 +1,5 @@
 venv/
 __pycache__/
 .env
+Climber_Carabiner/static/.webassets-cache/
+Climber_Carabiner/static/gen

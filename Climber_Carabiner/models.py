@@ -3,6 +3,8 @@ from sqlalchemy.orm import backref
 from flask import current_app as app
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin
+from geoalchemy2 import Geometry
+from sqlalchemy import func
 
 
 bcrypt = Bcrypt()
@@ -168,6 +170,9 @@ class Route(db.Model):
         db.Numeric,
         nullable=False
     )
+    geo = db.Column(
+        Geometry(geometry_type="POINT")
+    )
     description = db.Column(
         db.Text,
         nullable=True
@@ -176,6 +181,40 @@ class Route(db.Model):
         db.Text,
         nullable=False
     )
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'difficulty': self.difficulty,
+            'image_url': self.image_url,
+            'lat': str(self.lat),
+            'lon': str(self.lon),
+            'route_type': self.route_type
+        }
+
+    def get_routes_within_radius(lat, lon, radius):
+        """Return all routes within a given radius (in meters) of this point."""
+        geo = func.ST_GeomFromText('POINT({} {})'.format(lon, lat))
+        return Route.query.filter(func.ST_DistanceSphere(Route.geo, geo) < radius*1609.344).all()
+    
+    @classmethod
+    def add_route(cls, name, difficulty, image_url, lat, lon, route_type):
+        """Add a route to db."""
+        geo = 'POINT({} {})'.format(lon, lat)
+        new_route = Route(name = name, difficulty =difficulty, image_url=image_url, lat=lat, lon=lon, route_type=route_type, geo=geo)
+        db.session.add(new_route)
+        db.session.commit()
+    
+    @classmethod
+    def update_geometries(cls):
+        """Using each route lon and lat, add a geometry data to db."""
+        routes = Route.query.all()
+        for route in routes:
+            point = 'POINT({} {})'.format(route.lon, route.lat)
+            route.geo = point
+        db.session.commit()
+
 
 class Follows(db.Model):
     """Connection of a follower <-> followed_user."""
