@@ -1,0 +1,43 @@
+{% extends 'base.html' %} {% block body_class %}confirm{% endblock %} {% assets
+"auth_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %} {% block content %}
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="confirmModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Confirmation Email Sent
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You have been sent an email to confirm your account and begin connecting
+        with climbers. We also have requested your location information to help find you find climbers nearby!
+      </div>
+      <div class="modal-footer">
+        <button id="login" class="btn btn-secondary" data-dismiss="modal">
+          Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

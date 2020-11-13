@@ -1,0 +1,95 @@
+{% extends "base.html" %} {% block scripts %} {% endblock %} {% assets
+  "view_profile_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% block content %}
+<div class="row my-4">
+  <aside class="col-md-12 col-lg-12 col-sm-12" id="home-card">
+    <div class="card " style="height: 200px;">
+      <div class="card-body">
+        <div class="row justify-content-between align-items-center">
+          <div class="col-2">
+            <img src="{{current_user.image_url or 'http://placehold.it/200x200&text=Profile'}}" class="img-thumbnail"
+              alt="#" style="width: 70px; height: 70px;" />
+            <a href="/user/view-profile/{{current_user.id}}">
+              <h5 class="card-title m-2" style="font-size: 1.0rem">{{current_user.username}}</h5>
+            </a>
+            <h6 class="card-subtitle m-2 text-muted">Connection Status</h6>
+          </div>
+          <div class="col-8">
+            <div class="card-text">
+              <p><b>B: </b>{{boulder_levels[current_user.b_skill_level]}} -
+                <b>TR: </b>{{sport_levels[current_user.tr_skill_level]}} -
+                <b>LD: </b>{{sport_levels[current_user.ld_skill_level]}}</p>
+                <p>{{current_user.goals}}</p>
+            </div>
+          </div>
+          <div class="col-2">
+            <button id="user-connect-btn" data-route-id="{{user.id}}"
+              class="btn btn-primary">Connect</button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+<hr>
+<div class="row">
+  <div class="container col-lg-6 col-md-12">
+    <img class="img-thumbnail" src="{{user.image_url}}" alt="#" style="width: 150px; height: 150px;">
+    <h1>{{user.username}}</h1>
+    <p><b>Location: </b>{{user.location}}</p>
+    <h3>Skills</h3>
+    <p><b>Boudler: </b>{{boulder_levels[user.b_skill_level]}}</p>
+    <p><b>Top Rope: </b>{{sport_levels[user.tr_skill_level]}}</p>
+    <p><b>Lead: </b>{{sport_levels[user.ld_skill_level]}}</p>
+  </div>
+  <div class="col-lg-6 col-md-12">
+    <h3>Projects</h3>
+    {% if projected_routes %}
+    <ul id="project-list" class="list-group">
+      {% for p_route in projected_routes %}
+      <li id="{{p_route.id}}" class="list-group-item list-group-item-action my-2">
+        <div class="row justify-content-between">
+          <div class="col-4">
+            <a href="/route/{{p_route.id}}">{{ p_route.name }} </a>
+          </div>
+          <div class="col">
+            <p>{{p_route.difficulty}}</p>
+          </div>
+          <div class="col-2">
+            <p>{{p_route.location}}</p>
+          </div>
+          <div class="col-4">
+
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No projects yet, they are busy flashing their routes.</p>
+    {% endif %}
+    <hr />
+    <h3>Recent Sends</h3>
+    <div class="">
+      <ul id="send-list" class="list-group">
+        {% if sent_routes %}
+        {% for s_route in sent_routes %}
+        <li class="list-group-item list-group-item-action my-2">
+          <div class="d-flex-inline">
+            <a class="justify-content-start" href="/route/{{s_route.id}}" method="POST">{{ s_route.name }} </a>
+            <button id="sent-route" class="btn btn-sm btn-primary">SEND </button>
+          </div>
+        </li>
+        {% endfor %}
+        {% else %}
+        <p>Too busy dreaming about their proj to send</p>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}

@@ -1,5 +1,5 @@
 """Init Flask App"""
-from flask import Flask
+from flask import Flask, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_assets import Environment
 from flask_login import LoginManager
@@ -29,23 +29,20 @@ def create_app():
 
     # Flask-Login init
     login_manager = LoginManager()
-    login_manager.login_view = "auth_bp.login"
-    login_manager.init_app(app)
 
     # Mail init
     mail = Mail()
-    mail.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
+    
 
     # Assets init
     assets = Environment()
-    assets.init_app(app)
+    
 
     # DB init
     connect_db(app)
+    mail.init_app(app)
+    login_manager.init_app(app)
+    assets.init_app(app)
 
     with app.app_context():
         # Import parts of our application

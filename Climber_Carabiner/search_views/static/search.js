@@ -67,5 +67,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   s.src =
-    "https://maps.googleapis.com/maps/api/js?key=";
+    `https://maps.googleapis.com/maps/api/js?key=${process.env.MP_KEY}`;
 });
