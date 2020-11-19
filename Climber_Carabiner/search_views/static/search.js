@@ -29,19 +29,49 @@ document.addEventListener("DOMContentLoaded", function () {
           coords: { lat: parseFloat(routeData.lat), lng: parseFloat(routeData.lon) },
           title: `<h4>${routeData.name}</h4>`,
         });
+        addListItem(routeData);
       }
 
+    });
+
+
+
+    for (let routeData of response.data.routes) {
+      addMarker({
+        coords: { lat: parseFloat(routeData.lat), lng: parseFloat(routeData.lon) },
+        title: `<a href="/route/${routeData.id}"><h4>${routeData.name}</h4></a>`,
+      });
+
+      addListItem(routeData);
+    }
   });
 
-
-
-  for (let routeData of response.data.routes) {
-    addMarker({
-      coords: { lat: parseFloat(routeData.lat), lng: parseFloat(routeData.lon) },
-      title: `<h4>${routeData.name}</h4>`,
-    });
+  function addListItem(routeData) {
+    $routes = $("#route-list")
+    .append(`<li id="${routeData.id}" class="list-group-item list-group-item-action">
+      <div class="row justify-content-between">
+        <div class="col-lg-4 col-md-4">
+        <a href="/route/${routeData.id}">${routeData.name}</a>
+        </div>
+        <div class="col-lg-2 col-md-2">
+          <p>${routeData.difficulty}</p>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <p>${routeData.route_type}</p>
+        </div>
+        <div class="col-lg-3 col-md-3">
+        <button id="send-route" class="btn btn-sm btn-primary">Send</button>
+        <select name="attempts" id="attempts">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3+">3+</option>
+        </select>
+        <button id="project-route" class="btn btn-sm btn-danger">X</button>
+      </div>
+      </div>
+    </li>
+    `);
   }
-});
 
   function addMarker(properties) {
     let marker = new google.maps.Marker({
@@ -66,6 +96,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
   }
 
-  s.src =
-    `https://maps.googleapis.com/maps/api/js?key=${process.env.MP_KEY}`;
+  s.src = 'https://maps.googleapis.com/maps/api/js?key=' + 'GOOGLEMAPSKEY';
 });

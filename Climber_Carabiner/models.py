@@ -49,7 +49,7 @@ class Send(db.Model):
     def __repr__(self):
         """Show info about a Send"""
         s = self
-        return f"<Send {s.user_id} {s.route_id}>"
+        return f"<Send id: {s.id}, user_id: {s.user_id}, route_id: {s.route_id}, attempts: {s.attempts}>"
 
     def serialize(self):
         return {
@@ -68,17 +68,17 @@ class Send(db.Model):
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id', ondelete="cascade"),
-        primary_key=True
+        nullable=False
     )
 
     route_id = db.Column(
         db.Integer,
         db.ForeignKey('routes.id', ondelete="cascade"),
-        primary_key=True
+        nullable=False
     )
 
     attempts = db.Column(
-        db.Integer,
+        db.Text,
         nullable=True
     )
 
@@ -87,9 +87,11 @@ class Send(db.Model):
         nullable=True
     )
 
-    user = db.relationship('User')
+    user = db.relationship("User")
 
-    project = db.relationship('Route')
+    kudo = db.relationship('Kudos')
+
+    route = db.relationship('Route')
 
 
 
@@ -133,9 +135,13 @@ class Project(db.Model):
         nullable=True
     )
 
-    user = db.relationship('User')
+    user = db.relationship("User")
 
-    project = db.relationship('Route')
+    like = db.relationship('Likes')
+
+    route = db.relationship(
+        'Route'
+        )
 
 class User(UserMixin, db.Model):
     """User - UserMixin gives access to is_active, is_authenticated, is_anonymous, and get_id"""
@@ -210,23 +216,6 @@ class User(UserMixin, db.Model):
         db.Text,
         nullable=True
     )
-
-    # messages = db.relationship('Message')
-
-    # kudos = db.relationship(
-    #     'Send',
-    #     secondary="kudos",
-    #     primaryjoin=(Kudo.user_id == id))
-
-    # likes = db.relationship("Project", secondary="likes")
-
-    # projects = db.relationship(
-    #     'Project'
-    # )
-
-    # sends = db.relationship(
-    #     'Send'
-    # )
 
     followers = db.relationship(
         "User",
@@ -391,7 +380,15 @@ class Route(db.Model):
         nullable=False
     )
 
-    project = db.relationship("Project")
+    project = db.relationship(
+        "Project",
+        primaryjoin=(Project.route_id == id)
+    )
+
+    send = db.relationship(
+        "Send",
+        primaryjoin=(Send.route_id == id),
+    )
 
     def serialize(self):
         return {
@@ -415,7 +412,8 @@ class Route(db.Model):
     def get_routes_within_radius_count(lat, lon, radius, count):
         """Return all routes within a given radius (in meters) of this point."""
         geo = func.ST_GeomFromText('POINT({} {})'.format(lon, lat))
-        return Route.query.filter(func.ST_DistanceSphere(Route.geo, geo) < radius*1609.344).order_by(func.ST_DistanceSphere(Route.geo, geo)).offset(1).limit(count).all()
+        return Route.query.filter(func.ST_DistanceSphere(Route.geo, geo) < radius*1609.344).order_by(func.ST_DistanceSphere(Route.geo, geo)).limit(count).offset(1).all()
+        # Route.query.filter(func.ST_DistanceSphere(Route.geo, geo) < radius*1609.344).order_by(func.ST_DistanceSphere(Route.geo, geo)).offset(1).limit(count).all()
 
     def get_routes_within_radius_count_for_feed(lat, lon, radius, count):
         """Return all routes within a given radius (in meters) of this point."""
@@ -446,7 +444,8 @@ class Likes(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     user_id = db.Column(
@@ -454,31 +453,10 @@ class Likes(db.Model):
         db.ForeignKey('users.id', ondelete='cascade')
     )
 
-    route_id = db.Column(
+    project_id = db.Column(
         db.Integer,
-        db.ForeignKey('routes.id', ondelete='cascade'),
-        unique=True
-    )
-
-class Kudo(db.Model):
-    """Mapping user kudos to sends."""
-
-    __tablename__ = 'kudos'
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('users.id', ondelete='cascade')
-    )
-
-    route_id = db.Column(
-        db.Integer,
-        db.ForeignKey('routes.id', ondelete='cascade'),
-        unique=True
+        db.ForeignKey('projects.id', ondelete='cascade'),
+        unique=False
     )
 
 class Message(db.Model):
@@ -502,3 +480,25 @@ class Message(db.Model):
     )
 
     user = db.relationship('User')
+
+class Kudos(db.Model):
+    """Mapping user kudos to sends."""
+
+    __tablename__ = 'kudos'
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+        autoincrement=True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete='cascade')
+    )
+
+    send_id = db.Column(
+        db.Integer,
+        db.ForeignKey('sends.id', ondelete='cascade'),
+        unique=False
+    )

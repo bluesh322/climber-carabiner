@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block scripts %} {% endblock %} {% assets
+    "view_profile_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% block content %}
+<div class="row justify-content-start my-4">
+  <div class="col-lg-8 col-md-12">
+    <h5>Recent Projects ({{projected_routes | length}})</h5>
+    {% if projected_routes %}
+    <ul id="project-list" class="list-group">
+      {% for p_route in projected_routes %}
+      <li id="{{p_route.id}}" class="list-group-item list-group-item-action">
+        <div class="row justify-content-between">
+          <div class="col-lg-3 col-md-3">
+            <a href="/route/{{p_route.id}}">{{ p_route.name }} </a>
+          </div>
+          <div class="col">
+            <p>{{p_route.difficulty}}</p>
+          </div>
+          <div class="col">
+            <p>{{p_route.location}}</p>
+          </div>
+          {% if current_user.id == user.id %}
+          <div class="col-lg-2 col-md-2">
+            <button id="send-route" class="btn btn-sm btn-primary">Send</button>
+            <button id="project-route" class="btn btn-sm btn-danger">X</button>
+          </div>
+          {% else %}
+          <div class="col-lg-1 col-md-1">
+          {% for project in projects %}
+          {% if project.route_id == p_route.id %}
+          <span data-project-id="{{project.id}}" class="thumbs-up"><i
+                  class="{{'fas' if project.id in likes else 'far'}} fa-thumbs-up"></i></span>
+          {% endif %}
+          {% endfor %}
+          </div>
+          {% endif %}
+
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No projects yet, they are busy flashing their routes.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

@@ -25,17 +25,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     $("#project-list").on("click", "#send-route", async function (evt) {
         evt.preventDefault();
         let $route = $(evt.target.closest("li"));
+        let $sendBtn = $(evt.target.closest("button"))
+        let $attemptsSelect = $sendBtn.next();
         const res = await axios.post(`${BASE_URL}/user/add_sent_route/${$route.attr("id")}`, {
-            'route_id': $route
+            'route_id': $route,
+            'attempts': $attemptsSelect[0].value
         });
         let routeName = $route.children("div").children("div").children("a")[0].innerHTML;
-        let $sendBtn = $(evt.target.closest("button"));
         $sendBtn.remove();
-
+        $attemptsSelect.remove();
         console.log(res)
 
         $('#send-list').append(`<li class="list-group-item list-group-item-action">          <div class="row justify-content-between">
-        <div class="col">
+        <div class="col-lg-4 col-md-4">
         <a class="" href="/route/${res.data.sent.route_id}">${routeName}</a>
         </div>
         <div class="col-2">
@@ -49,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         evt.preventDefault();
         let $send = $(evt.target.closest("button"));
         const res = await axios.post(`${BASE_URL}/user/add_sent_route/${$send.attr("data-route-id")}`, {
-            'route_id': $send
+            'route_id': $send,
         })
         console.log(res)
 
@@ -69,6 +71,30 @@ document.addEventListener("DOMContentLoaded", async function () {
         let $listItem = $(evt.target.closest("li"));
         $listItem.remove();
 
+    });
+
+    $("#project-list").on('click', ".thumbs-up", async function (evt) {
+        evt.preventDefault();
+        const $userId = $(evt.target.closest("span")).attr("data-project-id");
+        let res = await axios.post(`${BASE_URL}/user/toggle_like/${$userId}`, {
+            'like_id': $userId
+        });
+        console.log(res.data.msg);
+
+        evt.target.classList.toggle("far");
+        evt.target.classList.toggle("fas");
+    });
+
+    $("#send-list").on('click', ".star", async function (evt) {
+        evt.preventDefault();
+        const $userId = $(evt.target.closest("span")).attr("data-send-id");
+        let res = await axios.post(`${BASE_URL}/user/toggle_kudo/${$userId}`, {
+            'like_id': $userId
+        });
+        console.log(res.data.msg);
+
+        evt.target.classList.toggle("far");
+        evt.target.classList.toggle("fas");
     });
 
 

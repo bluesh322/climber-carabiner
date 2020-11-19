@@ -4,7 +4,7 @@
 {% endassets %}
 {% block content %}
 <div class="row">
-  <aside class="col-lg-3 col-md-6 col-sm-12 my-4" style="width: 100%;" id="home-card">
+  <aside class="col-lg-3 col-md-4 col-sm-12 my-4" style="width: 100%;" id="home-card">
     <div class="card">
       <div class="card-body p-3">
         <div class="row justify-content-start align-items-center mb-2">
@@ -68,17 +68,17 @@
       {% endfor %}
     </ul>
   </aside>
-  <div class="col-lg-9 col-md-6 col-sm-12 my-4 mx-0" style="width: 100%;">
+  <div class="col-lg-9 col-md-8 col-sm-12 my-4 mx-0" style="width: 100%;">
     <ul class="list-group" id="feed-list" style="list-style: none">
       {% for item in feed %}
-      {% if item.username %}
+      {% if item.username and item not in is_following %}
       <li class="list-group-item my-2">
         <div class="row justify-content-start">
           <div class="col-lg-2">
             <img class="img-thumbnail" src="{{item.image_url or 'http://placehold.it/200x200&text=Logo'}}"
               style="width: 70px; height: auto;" alt="#" />
           </div>
-          <div class="col-4">
+          <div class="col-lg-4 col-md-12">
             <a href="/user/view-profile/{{item.id}}">
               <h5>{{item.username}}</h5>
             </a>
@@ -91,7 +91,7 @@
             <p><b>Location: </b>
               {{item.location}}
             </p>
-            <button id="connect-button" data-user-id="{{item.id}}" class="btn btn-primary my-1">Connect to user</button>
+            <button id="connect-button" data-user-id="{{item.id}}" class="btn btn-primary btn-sm my-1">Connect</button>
           </div>
       </li>
       {% else %}
@@ -103,23 +103,39 @@
             </a <p><b>Route Type:</b> {{item.route_type}}</p>
             <p><b>Difficulty:</b> {{item.difficulty}}</p>
             <p><b>Stars:</b> {{item.stars}}</p>
-            <p><b>Location</b> {{item.location}} {{item.location2 or ''}}</p>
-            {% if item.id not in is_project %}
+            <p class="afterBtn"><b>Location</b> {{item.location}} {{item.location2 or ''}}</p>
+            {% if item.id not in is_project and item.id not in is_send %}
             <button id="project-route" data-route-id="{{item.id}}" class="btn btn-primary btn-sm my-1">Project</button>
+            <button id="send-route" data-route-id="{{item.id}}" class="btn btn-sm btn-primary send">Send</button>
+            <select name="attempts" id="attempts">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3+">3+</option>
+            </select>
             {% endif %}
             <div class="align-items-end">
+              <div class="col">
               {% for proj in recent_projects %}
               {% if item.id == proj.route_id %}
               <a class="badge badge-pill badge-info" href="/user/view-profile/{{proj.user.id}}">P:
                 {{proj.user.username}}</a>
+                {% if proj.user.id != current_user.id %}
+                <span data-user-id="{{proj.id}}" class="thumbs-up"><i class="{{'fas' if proj.route_id in is_liked else 'far'}} fa-thumbs-up"></i></span>
+                {% endif %}
               {% endif %}
               {% endfor %}
+              </div>
+              <div class="col">
               {% for send in recent_sends %}
               {% if item.id == send.route_id %}
               <a class="badge badge-pill badge-success" href="/user/view-profile/{{send.user.id}}">S:
                 {{send.user.username}}</a>
+                {% if send.user.id != current_user.id %}
+                <span data-user-id="{{send.id}}" class="star"><i class="{{'fas' if send.id in kudos else 'far'}} fa-star"></i></span>
+                {% endif %}
               {% endif %}
               {% endfor %}
+              </div>
             </div>
 
           </div>

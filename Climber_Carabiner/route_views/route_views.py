@@ -8,8 +8,9 @@ from flask import (
     flash,
     jsonify
 )
-from ..models import User, db, Route
+from ..models import User, db, Route, Project, Send
 from flask_login import login_required, current_user
+from ..user_views.feed import generate_feed_from_users_and_routes
 
 sess = db.session
 
@@ -28,8 +29,16 @@ def load_user(id):
 @login_required
 def show_user_feed(route_id):
     route = Route.query.get_or_404(route_id)
-    nearby_routes = Route.get_routes_within_radius_count(route.lat, route.lon, 5, 5)
+    nearby_routes = Route.get_routes_within_radius_count(route.lat, route.lon, 5, 10)
+    recent_projects = Project.query.filter(Project.route_id == route_id).order_by(Project.projected_on.desc()).all()
+    recent_sends = Send.query.filter(Send.route_id == route_id).order_by(Send.sent_on.desc()).all()
+    feed = generate_feed_from_users_and_routes(recent_projects, recent_sends)
+    print("***********************")
+    print(recent_sends)
+    print(feed)
     return render_template(
         'route_details.html',
+        nearby_routes=nearby_routes,
         route=route,
-        nearby_routes=nearby_routes)
+        feed=feed
+        )

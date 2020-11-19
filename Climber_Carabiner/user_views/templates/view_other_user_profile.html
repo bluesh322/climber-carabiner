@@ -21,12 +21,11 @@
               <p><b>B: </b>{{boulder_levels[current_user.b_skill_level]}} -
                 <b>TR: </b>{{sport_levels[current_user.tr_skill_level]}} -
                 <b>LD: </b>{{sport_levels[current_user.ld_skill_level]}}</p>
-                <p>{{current_user.goals}}</p>
+              <p>{{current_user.goals}}</p>
             </div>
           </div>
           <div class="col-2">
-            <button id="user-connect-btn" data-route-id="{{user.id}}"
-              class="btn btn-primary">Connect</button></a>
+            <button id="user-connect-btn" data-route-id="{{user.id}}" class="btn btn-primary">Connect</button></a>
           </div>
         </div>
       </div>
@@ -34,8 +33,8 @@
   </aside>
 </div>
 <hr>
-<div class="row">
-  <div class="container col-lg-6 col-md-12">
+<div class="row justify-content-start">
+  <div class="col-lg-4 col-md-6">
     <img class="img-thumbnail" src="{{user.image_url}}" alt="#" style="width: 150px; height: 150px;">
     <h1>{{user.username}}</h1>
     <p><b>Location: </b>{{user.location}}</p>
@@ -44,24 +43,72 @@
     <p><b>Top Rope: </b>{{sport_levels[user.tr_skill_level]}}</p>
     <p><b>Lead: </b>{{sport_levels[user.ld_skill_level]}}</p>
   </div>
-  <div class="col-lg-6 col-md-12">
-    <h3>Projects</h3>
+  <div class="col-lg-8 col-md-12">
+    <div class="row justify-content-start">
+      <div class="col-lg-10 col-md-10">
+        <h5>Connection List ({{user.following | length}})</h5>
+      </div>
+      <div class="col-lg-2 col-md-2">
+        <a href="/user/connection_list/{{user.id}}">View All</a>
+      </div>
+    </div>
+    <ul id="connection-list" class="list-group">
+      {% if user.following %}
+      {% for followed_user in user.following[:5] %}
+      <li class="list-group-item list-group-item-action">
+        <div class="row justify-content-between">
+          <div class="col-lg-2 col-md-2">
+            <a href="/user/view-profile/{{followed_user.id}}">
+              <h6>{{followed_user.username}}</h6>
+            </a>
+          </div>
+          <div class="col-lg-6 col-md-6">
+            <p><b>B: </b>{{boulder_levels[followed_user.b_skill_level]}} -
+              <b>TR: </b>{{sport_levels[followed_user.tr_skill_level]}} -
+              <b>LD: </b>{{sport_levels[followed_user.ld_skill_level]}}</p>
+          </div>
+          {% if followed_user.id not in current_user.following and followed_user.id != current_user.id %}
+          <div class="col-lg-2 col-md-2">
+            <button class="btn btn-primary btn-sm">Connect</button>
+          </div>
+          {% else %}
+          <div class="col-lg-2 col-md-2">
+            <p>That's You!</p>
+          </div>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+      {% else %}
+      <p>You have no connections, try "connecting" to other users to see their info!</p>
+      {% endif %}
+    </ul>
+    <hr>
+    <div class="row justify-content-start">
+      <div class="col-lg-10 col-md-10">
+        <h5>Recent Projects ({{projected_routes | length}})</h5>
+      </div>
+      <div class="col-lg-2 col-md-2">
+        <a href="/user/projects_list/{{user.id}}">View All</a>
+      </div>
+    </div>
     {% if projected_routes %}
     <ul id="project-list" class="list-group">
-      {% for p_route in projected_routes %}
-      <li id="{{p_route.id}}" class="list-group-item list-group-item-action my-2">
+      {% for p_route in projected_routes[:5] %}
+      <li id="{{p_route.id}}" class="list-group-item list-group-item-action">
         <div class="row justify-content-between">
-          <div class="col-4">
+          <div class="col-lg-3 col-md-3">
             <a href="/route/{{p_route.id}}">{{ p_route.name }} </a>
           </div>
           <div class="col">
             <p>{{p_route.difficulty}}</p>
           </div>
-          <div class="col-2">
+          <div class="col">
             <p>{{p_route.location}}</p>
           </div>
-          <div class="col-4">
-
+          <div class="col-lg-1 col-md-1">
+            <span data-project-id="{{p_route.id}}" class="thumbs-up"><i
+                class="{{'fas' if p_route.id in likes else 'far'}} fa-thumbs-up"></i></span>
           </div>
         </div>
       </li>
@@ -71,25 +118,45 @@
     <p>No projects yet, they are busy flashing their routes.</p>
     {% endif %}
     <hr />
-    <h3>Recent Sends</h3>
-    <div class="">
-      <ul id="send-list" class="list-group">
-        {% if sent_routes %}
-        {% for s_route in sent_routes %}
-        <li class="list-group-item list-group-item-action my-2">
-          <div class="d-flex-inline">
-            <a class="justify-content-start" href="/route/{{s_route.id}}" method="POST">{{ s_route.name }} </a>
-            <button id="sent-route" class="btn btn-sm btn-primary">SEND </button>
-          </div>
-        </li>
-        {% endfor %}
-        {% else %}
-        <p>Too busy dreaming about their proj to send</p>
-        {% endif %}
-      </ul>
+    <div class="row justify-content-start">
+      <div class="col-lg-10 col-md-10">
+    <h5>Recent Sends ({{sent_routes | length}})</h5>
     </div>
+    <div class="col-lg-2 col-md-2">
+      <a href="/user/sends_list/{{user.id}}">View All</a>
+    </div>
+    </div>
+    <ul id="send-list" class="list-group">
+      {% if sent_routes %}
+      {% for s_route in sent_routes[:5] %}
+      <li class="list-group-item list-group-item-action">
+        <div class="row justify-content-start">
+          <div class="col-lg-3 col-md-3">
+            <a href="/route/{{s_route.id}}" method="POST">{{ s_route.name }} </a>
+          </div>
+          <div class="col">
+            <p>{{s_route.difficulty}}</p>
+          </div>
+          <div class="col">
+            <p>{{s_route.location}}</p>
+          </div>
+          <div class="col-lg-1 col-md-1">
+            {% for send in sends %}
+            {% if send.route_id == s_route.id %}
+            <span data-send-id="{{send.id}}" class="star"><i
+                class="{{'fas' if send.id in kudos else 'far'}} fa-star"></i></span>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+      {% else %}
+      <p>Too busy dreaming about their proj to send</p>
+      {% endif %}
+    </ul>
   </div>
 </div>
-</div>
+
 
 {% endblock %}

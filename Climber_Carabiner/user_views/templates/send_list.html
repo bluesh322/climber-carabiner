@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block scripts %} {% endblock %} {% assets
+    "view_profile_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% block content %}
+<div class="row justify-content-start my-4">
+    <div class="col-lg-8 col-md-12">
+        <div class="row justify-content-start">
+            <div class="col-lg-10 col-md-10">
+                <h5>Recent Sends ({{sent_routes | length}})</h5>
+            </div>
+            <div class="col-lg-2 col-md-2">
+                <a href="/user/view_sends/{{current_user.id}}">View All</a>
+            </div>
+        </div>
+        <div class="">
+            <ul id="send-list" class="list-group">
+
+                {% if sent_routes %}
+                {% for s_route in sent_routes %}
+                <li class="list-group-item list-group-item-action">
+                    <div class="row justify-content-between">
+                        <div class="col-lg-4 col-md-4">
+                            <a id="routeName" class="" href="/route/{{s_route.id}}">{{ s_route.name }} </a>
+                        </div>
+                        <div class="col-lg-2 col-md-2">
+                            <p>{{s_route.difficulty}}</p>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <p>{{s_route.location}}</p>
+                        </div>
+                        {% if current_user.id == user.id %}
+                        <div class="col-lg-2 col-md-2">
+                          <button id="send-route" class="btn btn-sm btn-danger">X</button>
+                        </div>
+                        {% else %}
+                        <div class="col-lg-1 col-md-1">
+                        {% for send in sends %}
+                        {% if send.route_id == s_route.id %}
+                        <span data-send-id="{{send.id}}" class="star"><i
+                                class="{{'fas' if send.id in kudos else 'far'}} fa-star"></i></span>
+                        {% endif %}
+                        {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+                {% else %}
+                <p>You have yet to send a route! Get out there and climb!</p>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

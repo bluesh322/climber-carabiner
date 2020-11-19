@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(async function (position) {
             console.log(position);
-            $.get( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+ position.coords.latitude + "," + position.coords.longitude +"&sensor=false"+`&key=${process.env.MP_KEY}`, async function(data) {
+            $.get( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+ position.coords.latitude + "," + position.coords.longitude +"&sensor=false"+`&key=GOOGLEMAPSKEY`, async function(data) {
                     console.log(data);
                     console.log(data.results[0].address_components[2].long_name);
                     console.log(data.results[0].address_components[4].long_name);
@@ -30,17 +30,37 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     $('#feed-list').on('click', "#project-route", async function (evt) {
         evt.preventDefault();
-        let $route = $("#project-route").attr("data-route-id")
+        let $route = $(evt.target.closest("button")).attr("data-route-id")
         const res = await axios.post(`${BASE_URL}/user/add_project_route/${$route}`, {
             'route_id': $route
         });
         console.log(res)
-
         let $projectBtn = $(evt.target.closest("button"))
-        $projectBtn.text("Added");
-        $projectBtn.removeClass("btn-primary");
-        $projectBtn.addClass("btn-success disabled");
-        $(evt.target.closest("li")).off("click", "#project-route");
+        let $sendBtn = $projectBtn.next();
+        let $attemptsSelect = $sendBtn.next();
+        $projectBtn.after($("<button class='btn btn-success disabled btn-sm addedBtn'>Added</button>"))
+        console.log($($sendBtn))
+        $projectBtn.remove();
+        setTimeout(() => { $(".addedBtn").remove()}, 1000);
+    });
+
+    $('#feed-list').on('click', "#send-route", async function (evt) {
+        evt.preventDefault();
+        let $route = $(evt.target.closest("button")).attr("data-route-id")
+        let $sendBtn = $(evt.target.closest("button"))
+        let $attemptsSelect = $sendBtn.next();
+        console.log($attemptsSelect[0].value)
+        const res = await axios.post(`${BASE_URL}/user/add_sent_route/${$route}`, {
+            'route_id': $route,
+            'attempts': $attemptsSelect[0].value
+        });
+        console.log(res)
+        let $projectBtn = $sendBtn.prev();
+        $sendBtn.after($("<button class='btn btn-success disabled btn-sm addedBtn'>Sent</button>"))
+        $sendBtn.remove();
+        $projectBtn.remove();
+        $attemptsSelect.remove();
+        setTimeout(() => { $(".addedBtn").remove() }, 1000);
     });
 
     $("#sidebar-list").on('click', "#connect-button", async function (evt) {
@@ -64,7 +84,33 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.log(res)
 
         let $connectBtn = $(evt.target.closest("button"));
+        $connectBtn.after($("<button class='btn btn-success disabled btn-sm addedBtn'>Connected</button>"))
         $connectBtn.remove();
+        setTimeout(() => { $(".addedBtn").remove() }, 1000);
     })
+
+    $("#feed-list").on('click', ".thumbs-up", async function (evt) {
+        evt.preventDefault();
+        const $userId = $(evt.target.closest("span")).attr("data-user-id");
+        let res = await axios.post(`${BASE_URL}/user/toggle_like/${$userId}`, {
+            'like_id': $userId
+        });
+        console.log(res.data.msg);
+
+        evt.target.classList.toggle("far");
+        evt.target.classList.toggle("fas");
+    });
+
+    $("#feed-list").on('click', ".star", async function (evt) {
+        evt.preventDefault();
+        const $userId = $(evt.target.closest("span")).attr("data-user-id");
+        let res = await axios.post(`${BASE_URL}/user/toggle_kudo/${$userId}`, {
+            'like_id': $userId
+        });
+        console.log(res.data.msg);
+
+        evt.target.classList.toggle("far");
+        evt.target.classList.toggle("fas");
+    });
     
 });

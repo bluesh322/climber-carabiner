@@ -36,7 +36,7 @@ def update_map_on_bounds_change():
     center = request.json['center']
     lat = center['lat']
     lon = center['lng']
-    routes = Route.get_routes_within_radius(lat, lon, 20)
+    routes = Route.get_routes_within_radius(lat, lon, 5)
     all_routes =  [route.serialize() for route in routes]
     return jsonify(routes=all_routes)
 

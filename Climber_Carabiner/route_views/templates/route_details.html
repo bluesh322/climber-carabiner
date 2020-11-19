@@ -7,20 +7,50 @@
   <aside class="col-md-4 col-lg-3 col-sm-12" id="home-card">
     <div class="card" style="width: 100%; height: 90%;">
       <div class="card-body">
-        <div class="row justify-content-between">
-          <div class="col">
+        <div class="row my-4 align-items-center">
+          <div class="col-lg-6 col-6-md">
             <img src="{{current_user.image_url or 'http://placehold.it/200x200&text=Profile'}}" class="img-thumbnail"
-              alt="#" style="width: 70px; height: auto;" />
+              alt="#" style="width: 80px; height: 80px;" />
           </div>
-          <div class="col">
+          <div class="col-lg-6 col-6-md">
             <a href="/user/view-profile/{{current_user.id}}">
-              <h5 class="card-title" style="font-size: 0.8rem">{{current_user.username}}</h5>
+              <h4 class="card-title">{{current_user.username}}</h4>
             </a>
-            <button id="user-send-btn" data-route-id="{{route.id}}" class="btn btn-primary btn-sm my-2">Send</button></a>
-            <button id="user-project-btn" data-route-id="{{route.id}}"
-              class="btn btn-primary btn-sm">Project</button></a>
+
           </div>
         </div>
+        {% if not route.send %}
+        {% if not route.project %}
+        <div class="row my-2 align-items-center">
+          <div class="col-lg-4 col-md-4">
+            <button id="user-project-btn" data-route-id="{{route.id}}"
+            class="btn btn-primary btn-sm">Project</button>
+          </div>
+        </div>
+        {% else %}
+        <div class="row my-2 align-items-center">
+          <div class="col-lg-12 col-md-12">
+            <p>Projected Route</p>
+          </div>
+        </div>
+        {% endif %}
+        <div class="row my-2 align-items-center">
+          <div class="col-lg-7 col-md-7">
+            <button id="user-send-btn" data-route-id="{{route.id}}" class="btn btn-primary btn-sm">Send</button>
+            <select name="attempts" id="attempts">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3+">3+</option>
+            </select>
+          </div>
+        </div>
+        {% else %}
+        <div class="row my-2 align-items-center">
+          <div class="col-lg-7 col-md-7">
+            <p>Sent Route</p>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </aside>
@@ -43,16 +73,16 @@
   <div class="col-md-4 col-lg-6 col-sm-12">
     <h4>Climber Feed</h4>
     <ul class="list-group">
-      {% for route in nearby_routes %}
+      {% for item in feed %}
       <li class="list-group-item">
         <div class="row justify-content-start">
           <div class="col">
-            <img src="{{route.image_url}}" alt="..." style="width: auto; height: 100px;" />
-          </div>
-          <div class="col">
-            <h5>{{route.name}}</h5>
-            <p>{{route.difficulty}}</p>
-            <a href="/route/{{route.id}}" class="btn btn-primary btn-sm">Link to route page</a>
+            <h5>{{item.user.username}}</h5>
+            {% if item.attempts %}
+            <p>Sent this route on {{item.sent_on.strftime('%m-%d-%y')}}</p>
+            {% else %}
+            <p>Has recently projected this route {{item.attempts}}</p>
+            {% endif %}
           </div>
         </div>
       </li>
@@ -62,13 +92,20 @@
   <div class="col-md-4 col-lg-6 col-sm-6">
     <h4>Nearby Routes</h4>
     <ul class="list-group">
+      {% if nearby_routes %}
       {% for route in nearby_routes %}
       <li class="list-group-item">
-        <h5>{{route.name}}</h5>
-        <p>{{route.difficulty}}</p>
-        <a href="/route/{{route.id}}" class="btn btn-primary btn-sm">Link to route page</a>
+        <a href="/route/{{route.id}}" class=""><h5>{{route.name}}</h5></a>
+        <p><b>Type:</b> {{route.route_type}}
+        <b>Difficulty:</b> {{route.difficulty}}
+        <b>Location: </b> {{route.location}} {{location2 or ''}}
+      </p>
+
       </li>
       {% endfor %}
+      {% else %}
+      <p>This appears to be a lone route. Which doesn't happen very often.</p>
+      {% endif %}
     </ul>
   </div>
 </div>

@@ -5,16 +5,25 @@
 {% block content %}
 
 <div class="row justify-content-around my-4">
-  <div class="col-lg-4 col-md-6 col-sm-12">
-
-    <img class="img-thumbnail" src="{{current_user.image_url or 'http://placehold.it/200x200&text=Profile'}}"
-      style="width: 90px; height: 90px;" />
-    <h3><b>Username: </b>{{ current_user.username}}</h1>
-    <p><b>Email: </b>{{current_user.email}}</p>
-    <p><b>Location: </b>{{current_user.location}}</p>
-    <a href="/user/edit-profile">
-      <button class="btn btn-primary my-3">Edit Profile</button>
-    </a>
+  <div class="col-lg-4 col-md-12 col-sm-12">
+    <div class="row justify-content-start">
+      <div class="col-lg-5 col-md-12">
+        <img class="img-thumbnail" src="{{current_user.image_url or 'http://placehold.it/200x200&text=Profile'}}"
+          style="width: 90px; height: 90px;" />
+        <h3><b>Username: </b>{{ current_user.username}}</h1>
+          <p><b>Email: </b>{{current_user.email}}</p>
+          <p><b>Location: </b>{{current_user.location}}</p>
+          <a href="/user/edit-profile">
+            <button class="btn btn-primary my-3">Edit Profile</button>
+          </a>
+      </div>
+      <div class="col-lg-1 col-md-12">
+        <h5>Likes</h5>
+        <a href="">{{likes | length}}</a>
+        <h5>Kudos</h5>
+        <a href="">{{kudos | length}}</a>
+      </div>
+    </div>
     <hr>
     <form action="/user/edit_goals" method="POST" id="editGoals">
       {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
@@ -27,25 +36,33 @@
     </form>
   </div>
 
-  <div class="col-lg-4 col-md-6 col-sm-12">
+  <div class="col-lg-8 col-md-12 col-sm-12">
     <div class="row justify-content-start">
-      <div class="col-8">
-        <h5>Connection List</h5>
+      <div class="col-lg-10 col-md-10">
+        <h5>Connection List ({{current_user.following | length}})</h5>
       </div>
-      <div class="col-4">
-        <a href="/user/view_connections/{{current_user.id}}">View All</a>
+      <div class="col-lg-2 col-md-2">
+        <a href="/user/connections_list/{{current_user.id}}">View All</a>
       </div>
     </div>
     <ul id="connection-list" class="list-group">
       {% if current_user.following %}
-      {% for followed_user in current_user.following %}
-      <li class="list-group-item list-group-item-action pr-0">
+      {% for followed_user in current_user.following[:5] %}
+      <li class="list-group-item list-group-item-action">
         <div class="row justify-content-between">
-          <div class="col-8">
-            <a href="/user/view-profile/{{followed_user.id}}"><h6>{{followed_user.username}}</h6></a>
+          <div class="col-lg-3 col-md-3">
+            <a href="/user/view-profile/{{followed_user.id}}">
+              <h6>{{followed_user.username}}</h6>
+            </a>
           </div>
-          <div class="col-4">
-            <button id="disconnect-button" data-user-id="{{followed_user.id}}" class="btn btn-danger btn-sm p-1">Disconnect</button>
+          <div class="col-lg-6 col-md-6">
+            <p><b>B: </b>{{boulder_levels[followed_user.b_skill_level]}} -
+              <b>TR: </b>{{sport_levels[followed_user.tr_skill_level]}} -
+              <b>LD: </b>{{sport_levels[followed_user.ld_skill_level]}}</p>
+          </div>
+          <div class="col-lg-2 col-md-2">
+            <button id="disconnect-button" data-user-id="{{followed_user.id}}"
+              class="btn btn-danger btn-sm p-1">Disconnect</button>
           </div>
         </div>
       </li>
@@ -54,33 +71,36 @@
       <p>You have no connections, try "connecting" to other users to see their info!</p>
       {% endif %}
     </ul>
-  </div>
-
-  <div class="col-lg-4 col-md-12 col-sm-12">
+    <hr>
     <div class="row justify-content-start">
-      <div class="col-8">
-        <h5>Recent Projects</h5>
+      <div class="col-lg-10 col-md-10">
+        <h5>Recent Projects ({{projected_routes | length}})</h5>
       </div>
-      <div class="col-4">
-        <a href="/user/view_projects/{{current_user.id}}">View All</a>
+      <div class="col-lg-2 col-md-2">
+        <a href="/user/projects_list/{{current_user.id}}">View All</a>
       </div>
     </div>
     {% if projected_routes %}
     <ul id="project-list" class="list-group">
-      {% for p_route in projected_routes %}
-      <li id="{{p_route.id}}" class="list-group-item list-group-item-action">
+      {% for p_route in projected_routes[:5] %}
+      <li id="{{p_route.route.id}}" class="list-group-item list-group-item-action">
         <div class="row justify-content-between">
-          <div class="col">
-            <a href="/route/{{p_route.id}}">{{ p_route.name }} </a>
+          <div class="col-lg-4 col-md-4">
+            <a href="/route/{{p_route.id}}">{{ p_route.route.name }} </a>
           </div>
-          <div class="col">
-            <p>{{p_route.difficulty}}</p>
+          <div class="col-lg-2 col-md-2">
+            <p>{{p_route.route.difficulty}}</p>
           </div>
-          <div class="col-2">
-            <p>{{p_route.location}}</p>
+          <div class="col-lg-3 col-md-3">
+            <p>{{p_route.route.location}}</p>
           </div>
-          <div class="col-4">
+          <div class="col-lg-3 col-md-3">
             <button id="send-route" class="btn btn-sm btn-primary">Send</button>
+            <select name="attempts" id="attempts">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3+">3+</option>
+            </select>
             <button id="project-route" class="btn btn-sm btn-danger">X</button>
           </div>
         </div>
@@ -92,31 +112,34 @@
     {% endif %}
     <hr />
     <div class="row justify-content-start">
-      <div class="col-8">
-        <h5>Recent Sends</h5>
+      <div class="col-lg-10 col-md-10">
+        <h5>Recent Sends ({{sent_routes | length}})</h5>
       </div>
-      <div class="col-4">
-        <a href="/user/view_sends/{{current_user.id}}">View All</a>
+      <div class="col-lg-2 col-md-2">
+        <a href="/user/sends_list/{{current_user.id}}">View All</a>
       </div>
     </div>
     <div class="">
       <ul id="send-list" class="list-group">
-        
+
         {% if sent_routes %}
-        {% for s_route in sent_routes %}
+        {% for s_route in sent_routes[:5] %}
         <li class="list-group-item list-group-item-action">
           <div class="row justify-content-between">
-            <div class="col">
-            <a id="routeName" class="" href="/route/{{s_route.id}}">{{ s_route.name }} </a>
+            <div class="col-lg-4 col-md-4">
+              <a id="routeName" class="" href="/route/{{s_route.id}}">{{ s_route.route.name }} </a>
             </div>
-            <div class="col">
-              <p>{{s_route.difficulty}}</p>
+            <div class="col-lg-2 col-md-2">
+              <p>Attempts: {{s_route.attempts}}</p>
             </div>
-            <div class="col-4">
-              <p>{{s_route.location}}</p>
+            <div class="col-lg-2 col-md-2">
+              <p>{{s_route.route.difficulty}}</p>
             </div>
-            <div class="col-2">
-            <button id="sent-route" data-route-id="{{s_route.id}}" class="btn btn-sm btn-danger">X</button>
+            <div class="col-lg-3 col-md-3">
+              <p>{{s_route.route.location}}</p>
+            </div>
+            <div class="col-lg-1 col-md-1">
+              <button id="sent-route" data-route-id="{{s_route.route.id}}" class="btn btn-sm btn-danger">X</button>
             </div>
           </div>
         </li>
@@ -128,6 +151,6 @@
     </div>
   </div>
 </div>
-</div>
+
 
 {% endblock %}

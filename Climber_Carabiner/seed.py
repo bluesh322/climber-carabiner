@@ -3,7 +3,7 @@
 import sys 
 sys.path.append('..')
 from wsgi import app
-from Climber_Carabiner.models import db, User, Route, Send, Project, Follows, Likes, Kudo
+from Climber_Carabiner.models import db, User, Route, Project, Follows, Send, Likes, Kudos
 import datetime
 from sqlalchemy import func
 
@@ -109,6 +109,7 @@ db.session.commit()
 s = Send()
 s.user_id = 1
 s.route_id = 2
+s.attempts = "2"
 s.sent_on = datetime.datetime.now()
 
 db.session.add(s)
@@ -133,10 +134,10 @@ db.session.commit()
 
 l = Likes()
 l.user_id = 1
-l.route_id = 1
+l.project_id = 1
 db.session.add(l)
 
-k = Kudo()
-k.route_id = 2
+k = Kudos()
+k.send_id = 1
 k.user_id = 2
 db.session.add(k)

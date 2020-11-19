@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block scripts %} {% endblock %} {% assets
+    "view_profile_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% block content %}
+<div class="row justify-content-start my-4">
+
+
+    <div class="col-lg-8 col-md-12">
+        <div class="row justify-content-start">
+            <div class="col-lg-10 col-md-10">
+                <h5>Connection List ({{user.following | length}})</h5>
+            </div>
+        </div>
+        <ul id="connection-list" class="list-group">
+            {% if user.following %}
+            {% for followed_user in user.following %}
+            <li class="list-group-item list-group-item-action">
+                <div class="row justify-content-between">
+                    <div class="col-lg-2 col-md-2">
+                        <a href="/user/view-profile/{{followed_user.id}}">
+                            <h6>{{followed_user.username}}</h6>
+                        </a>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <p><b>B: </b>{{boulder_levels[followed_user.b_skill_level]}} -
+                            <b>TR: </b>{{sport_levels[followed_user.tr_skill_level]}} -
+                            <b>LD: </b>{{sport_levels[followed_user.ld_skill_level]}}</p>
+                    </div>
+                    <div class="col-lg-2 col-md-2">
+                        <button id="disconnect-button" data-user-id="{{followed_user.id}}"
+                          class="btn btn-danger btn-sm p-1">Disconnect</button>
+                      </div>
+                </div>
+            </li>
+            {% endfor %}
+            {% else %}
+            <p>You have no connections, try "connecting" to other users to see their info!</p>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
