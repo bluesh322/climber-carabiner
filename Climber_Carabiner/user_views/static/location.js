@@ -12,8 +12,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     
                 } else if (result.state == 'prompt') {
                     alert(result.state);
-           
-                    navigator.geolocation.getCurrentPosition(revealPosition, positionDenied, geoSettings);
+        
                 } else if (result.state == 'denied') {
                     alert(result.state);
                 }
