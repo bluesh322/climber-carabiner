@@ -24,15 +24,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     $("#location").after("<p class='text-success'>Success, redirecting to user-feed in 5 seconds</p>")
                     setTimeout(() => { window.location.replace(`${BASE_URL}/user-feed`);}, 5000);
                 } else if (result.state == 'prompt') {
-                    alert(result.state);
+                    alert("Current Permission Settings: " + result.state);
                     navigator.geolocation.getCurrentPosition(async function (position) {});
                     $("#location").after("<p class='text-danger'>You have blocked location permission on your browser, please change this setting for your browser</p>")
                 } else if (result.state == 'denied') {
-                    alert(result.state);
+                    alert("Current Permission Settings: " + result.state);
                     $("#location").after("<p class='text-danger'>You have blocked location permission on your browser, please change this setting for your browser</p>")
-                }
-                result.onchange = function() {
-                    alert(result.state);
                 }
             });
 
