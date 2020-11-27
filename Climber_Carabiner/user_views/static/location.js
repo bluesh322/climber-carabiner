@@ -8,20 +8,20 @@ document.addEventListener("DOMContentLoaded", async function () {
                 name: 'geolocation'
             }).then(function(result) {
                 if (result.state == 'granted') {
-                    report(result.state);
+                    alert(result.state);
                     geoBtn.style.display = 'none';
                     
                 } else if (result.state == 'prompt') {
-                    report(result.state);
+                    alert(result.state);
                     geoBtn.style.display = 'none';
            
                     navigator.geolocation.getCurrentPosition(revealPosition, positionDenied, geoSettings);
                 } else if (result.state == 'denied') {
-                    report(result.state);
+                    alert(result.state);
                     geoBtn.style.display = 'inline';
                 }
                 result.onchange = function() {
-                    report(result.state);
+                    alert(result.state);
                 }
                 return result;
             });
