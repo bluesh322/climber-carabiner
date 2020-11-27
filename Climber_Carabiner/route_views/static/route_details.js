@@ -43,4 +43,28 @@ document.addEventListener("DOMContentLoaded", async function () {
             'user_id': $user
         })
     });
+
+    $("#feed-list").on('click', ".thumbs-up", async function (evt) {
+        evt.preventDefault();
+        const $userId = $(evt.target.closest("span")).attr("data-project-id");
+        let res = await axios.post(`${BASE_URL}/user/toggle_like/${$userId}`, {
+            'like_id': $userId
+        });
+        console.log(res.data.msg);
+
+        evt.target.classList.toggle("far");
+        evt.target.classList.toggle("fas");
+    });
+
+    $("#feed-list").on('click', ".star", async function (evt) {
+        evt.preventDefault();
+        const $userId = $(evt.target.closest("span")).attr("data-send-id");
+        let res = await axios.post(`${BASE_URL}/user/toggle_kudo/${$userId}`, {
+            'like_id': $userId
+        });
+        console.log(res.data.msg);
+
+        evt.target.classList.toggle("far");
+        evt.target.classList.toggle("fas");
+    });
 });

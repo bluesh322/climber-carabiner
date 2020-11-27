@@ -4,8 +4,11 @@ import sys
 sys.path.append('..')
 from wsgi import app
 from Climber_Carabiner.models import db, User, Route, Project, Follows, Send, Likes, Kudos
-import datetime
+import datetime, requests, json, os
 from sqlalchemy import func
+
+BASE_URL = 'https://www.mountainproject.com/data/'
+MP_KEY = os.environ.get('MP_KEY') 
 
 db.drop_all()
 db.create_all()
@@ -23,121 +26,26 @@ blues.lat = "33.2148"
 blues.lon = "-97.1331"
 blues.geo = func.ST_GeomFromText('POINT({} {})'.format(blues.lon, blues.lat))
 
-jerry = User.signup('jerry', 'jerbear@gmail.com', 'testpass')
-
-jerry.confirmed = True
-jerry.confirmed_on = datetime.datetime.now()
-jerry.goals = "Reimer's Ranch"
-jerry.b_skill_level = "5"
-jerry.tr_skill_level = "7"
-jerry.ld_skill_level = "6"
-jerry.location = "Austin, Texas"
-jerry.lat = "30.2672"
-jerry.lon = "-97.7431"
-jerry.geo = func.ST_GeomFromText('POINT({} {})'.format(jerry.lon, jerry.lat))
-
-sarah = User.signup('sarah', 'sarah@gmail.com', 'testpass')
-
-sarah.confirmed = True
-sarah.confirmed_on = datetime.datetime.now()
-sarah.goals = "Huecos Tanks"
-sarah.b_skill_level = "0"
-sarah.tr_skill_level = "8"
-sarah.ld_skill_level = "7"
-sarah.location = "Dallas, Texas"
-sarah.lat = "32.7767"
-sarah.lon = "-96.7970"
-sarah.geo = func.ST_GeomFromText('POINT({} {})'.format(sarah.lon, sarah.lat))
-
-
-josh = User.signup('josh', 'josh@gmail.com', 'testpass')
-
-josh.confirmed = True
-josh.confirmed_on = datetime.datetime.now()
-josh.goals = "The pink one in the corner"
-josh.b_skill_level = "8"
-josh.tr_skill_level = "7"
-josh.ld_skill_level = "0"
-josh.location = "Fort Worth, Texas"
-josh.lat = "32.7555"
-josh.lon = "-97.3308"
-josh.geo = func.ST_GeomFromText('POINT({} {})'.format(josh.lon, josh.lat))
-
-
-ben = User.signup('ben', 'ben@gmail.com', 'testpass')
-
-ben.confirmed = True
-ben.confirmed_on = datetime.datetime.now()
-ben.goals = "Wichita Mountains"
-ben.b_skill_level = "5"
-ben.tr_skill_level = "3"
-ben.ld_skill_level = "0"
-ben.location = "Plano, Texas"
-ben.lat = "33.0198"
-ben.lon = "-96.6989"
-ben.geo = func.ST_GeomFromText('POINT({} {})'.format(ben.lon, ben.lat))
-
-users = [blues, jerry, sarah, josh, ben]
-
-db.session.add_all(users)
-
+db.session.add(blues)
 db.session.commit()
 
-route1 = Route(name="Big Theif", difficulty="V3", image_url="http://placehold.it/200x200&text=Route", stars="2", location="Dallas", location2="Texas", lat="32.7767", lon="-96.7970", route_type="Boulder")
-route2 = Route(name="Not My Momma", difficulty="V4", image_url="http://placehold.it/200x200&text=Route", stars="3", location="Plano", location2="Texas", lat="33.0198", lon="-96.6989", route_type="Lead")
-route1.geo = func.ST_GeomFromText('POINT({} {})'.format(route1.lon, route1.lat))
-route2.geo = func.ST_GeomFromText('POINT({} {})'.format(route2.lon, route2.lat))
+dist = '200'
+results = '500'
 
-db.session.add(route1)
-db.session.add(route2)
-db.session.commit()
 
-p1 = Project()
-p1.user_id = 1
-p1.route_id = 1
-p1.projected_on = datetime.datetime.now()
+lat = ['32.7767', '30.2672', '31.7619', '31.3113', '34.7465', '32.2988', '28.5309', '33.7984', '35.2026', '36.1627', '35.4676', '35.0844', '33.4484', '36.1699',
+    '34.0522', '38.5816', '39.7392', '40.7608', '39.1911', '37.8651', '45.5051', '47.6062']
+lon = ['-96.7970', '-97.7431', '-106.4850', '-92.4451', '-92.2896', '-90.1848', '-81.3776', '-89.1476', '-80.8341', '-86.7816', '-97.5164', '-106.6504', '-112.0740', '-115.1398'
+    '-118.2437', '-121.4944', '-104.9903', '-111.8910', '-106.8175', '-119.5383', '-122.6750', '-122.3321']
 
-p2 = Project()
-p2.user_id = 2
-p2.route_id = 2
-p2.projected_on = datetime.datetime.now()
+i = 0
+for l in lat:
 
-db.session.add(p1)
-db.session.add(p2)
-db.session.commit()
-
-s = Send()
-s.user_id = 1
-s.route_id = 2
-s.attempts = "2"
-s.sent_on = datetime.datetime.now()
-
-db.session.add(s)
-db.session.commit()
-
-f1 = Follows()
-f1.user_being_followed_id = 2
-f1.user_following_id = 1
-db.session.add(f1)
-
-f2 = Follows()
-f2.user_being_followed_id = 3
-f2.user_following_id = 1
-db.session.add(f2)
-
-f3 = Follows()
-f3.user_being_followed_id = 1
-f3.user_following_id = 2
-db.session.add(f3)
-
-db.session.commit()
-
-l = Likes()
-l.user_id = 1
-l.project_id = 1
-db.session.add(l)
-
-k = Kudos()
-k.send_id = 1
-k.user_id = 2
-db.session.add(k)
+    routes_res = requests.get(f'{BASE_URL}get-routes-for-lat-lon?lat={l}&lon={lon[i]}&maxDistance={dist}&maxResults={results}&key={MP_KEY}')
+    routes = json.loads(routes_res.text)
+    print("**************************************")
+    print(routes)
+    routes_t = routes['routes']
+    for route in routes_t:
+        Route.add_route(mp_id = route['id'], name=route['name'], difficulty=route['rating'], image_url=route['imgMedium'], stars=route['stars'], location=route['location'][0], location2=route['location'][1] or None, lat=route['latitude'], lon=route['longitude'], route_type=route['type'])
+    i += 1

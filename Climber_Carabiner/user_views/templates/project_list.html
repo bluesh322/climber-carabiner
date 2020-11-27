@@ -12,13 +12,13 @@
       <li id="{{p_route.id}}" class="list-group-item list-group-item-action">
         <div class="row justify-content-between">
           <div class="col-lg-3 col-md-3">
-            <a href="/route/{{p_route.id}}">{{ p_route.name }} </a>
+            <a href="/route/{{p_route.route.id}}">{{ p_route.route.name }} </a>
           </div>
           <div class="col">
-            <p>{{p_route.difficulty}}</p>
+            <p>{{p_route.route.difficulty}}</p>
           </div>
           <div class="col">
-            <p>{{p_route.location}}</p>
+            <p>{{p_route.route.location}}</p>
           </div>
           {% if current_user.id == user.id %}
           <div class="col-lg-2 col-md-2">
@@ -27,12 +27,9 @@
           </div>
           {% else %}
           <div class="col-lg-1 col-md-1">
-          {% for project in projects %}
-          {% if project.route_id == p_route.id %}
-          <span data-project-id="{{project.id}}" class="thumbs-up"><i
-                  class="{{'fas' if project.id in likes else 'far'}} fa-thumbs-up"></i></span>
-          {% endif %}
-          {% endfor %}
+          
+          <span data-project-id="{{p_route.id}}" class="thumbs-up"><i
+                  class="{{'fas' if p_route.id in likes else 'far'}} fa-thumbs-up"></i></span>
           </div>
           {% endif %}
 

@@ -5,12 +5,59 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin
 from geoalchemy2 import Geometry
 from sqlalchemy import func, asc
-import datetime
+import datetime, re
 
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 login_manager = LoginManager()
+
+boulder_levels = [ 'V', 'V0',
+         'V1',
+         'V2',
+         'V3',
+         'V4',
+         'V5',
+         'V6',
+         'V7',
+         'V8',
+         'V9']
+
+sport_levels = ['5.4','5.5',
+        '5.6',
+        '5.6+',
+        '5.7-',
+        '5.7',
+        '5.7+',
+        '5.8-',
+        '5.8',
+        '5.8+',
+        '5.9-',
+        '5.9',
+        '5.9+',
+        '5.10',
+        '5.10a',
+        '5.10b',
+        '5.10c',
+        '5.10d',
+        '5.11',
+        '5.11a',
+        '5.11b',
+        '5.11c',
+        '5.11d',
+        '5.12',
+        '5.12a',
+        '5.12b',
+        '5.12c',
+        '5.12d',
+        '5.13',
+        '5.13a',
+        '5.13b',
+        '5.13c',
+        '5.13d',
+        '5.14',
+        '5.14a',
+        '5.14b']
 
 def connect_db(app):
     db.app = app
@@ -338,12 +385,16 @@ class Route(db.Model):
         primary_key=True,
         autoincrement=True
     )
+    mp_id = db.Column(
+        db.Text,
+        nullable=False
+    )
     name = db.Column(
         db.Text,
         nullable=False
     )
     difficulty = db.Column(
-        db.Text,
+        db.Integer,
         nullable=False
     )
     image_url = db.Column(
@@ -419,12 +470,29 @@ class Route(db.Model):
         """Return all routes within a given radius (in meters) of this point."""
         geo = func.ST_GeomFromText('POINT({} {})'.format(lon, lat))
         return Route.query.filter(func.ST_DistanceSphere(Route.geo, geo) < radius*1609.344).order_by(func.ST_DistanceSphere(Route.geo, geo)).limit(count).all()
+
+    def get_routes_search_all():
+        """Return all routes"""
     
     @classmethod
-    def add_route(cls, name, difficulty, image_url, stars, location, location2, lat, lon, route_type):
+    def add_route(cls, mp_id, name, difficulty, image_url, stars, location, location2, lat, lon, route_type):
         """Add a route to db."""
         geo = 'POINT({} {})'.format(lon, lat)
-        new_route = Route(name = name, difficulty =difficulty, image_url=image_url, stars=stars, location=location, location2=location2, lat=lat, lon=lon, route_type=route_type, geo=geo)
+        new_route = Route(mp_id=mp_id, name = name, image_url=image_url, stars=stars, location=location, location2=location2, lat=lat, lon=lon, route_type=route_type, geo=geo)
+        if route_type == 'Boulder' or difficulty[0] == "V":
+            if difficulty in boulder_levels:
+                new_route.difficulty = boulder_levels.index(difficulty)
+            else:
+                difficulty = difficulty[0:1]
+                difficulty = difficulty.strip()
+                new_route.difficulty = boulder_levels.index(difficulty) or '0'
+        else:
+            if difficulty in sport_levels:
+                new_route.difficulty = sport_levels.index(difficulty)
+            else:
+                difficulty = difficulty[0:4]
+                difficulty = difficulty.strip()
+                new_route.difficulty = sport_levels.index(difficulty) or '0'
         db.session.add(new_route)
         db.session.commit()
     

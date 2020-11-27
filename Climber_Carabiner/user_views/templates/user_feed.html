@@ -23,9 +23,9 @@
             <p class="card-text"><b>Goals: </b>{{ current_user.goals or 'Set up your goals' }} </p>
           </div>
           <div class="col-12">
-            <p class="card-text"><b>B: </b>{{ boulder_levels[current_user.b_skill_level] or 'Set up your boulder' }}</p>
-            <p class="card-text"><b>TR: </b>{{ sport_levels[current_user.ld_skill_level] or 'Set up your lead' }} </p>
-            <p class="card-text"><b>LD: </b>{{ sport_levels[current_user.tr_skill_level] or 'Set up your trad' }} </p>
+            <p class="card-text"><b>B: </b>{{ boulder_levels[current_user.b_skill_level | int] or 'Set up your boulder' }}</p>
+            <p class="card-text"><b>TR: </b>{{ sport_levels[current_user.ld_skill_level | int] or 'Set up your lead' }} </p>
+            <p class="card-text"><b>LD: </b>{{ sport_levels[current_user.tr_skill_level | int] or 'Set up your trad' }} </p>
             <p class="card-text">{{ current_user.location or 'Set up your location' }} </p>
           </div>
         </div>
@@ -54,11 +54,11 @@
             </p>
           </div>
           <div class="col-12">
-            <p><b>B: </b>{{boulder_levels[user.b_skill_level] or 'N/A'}}</p>
+            <p><b>B: </b>{{boulder_levels[user.b_skill_level | int] or 'N/A'}}</p>
             <p> <b>TR:
-              </b>{{sport_levels[user.tr_skill_level] or 'N/A'}}</p>
+              </b>{{sport_levels[user.tr_skill_level | int] or 'N/A'}}</p>
               <p><b>LD:
-              </b>{{sport_levels[user.ld_skill_level] or 'N/A'}}</p>
+              </b>{{sport_levels[user.ld_skill_level | int] or 'N/A'}}</p>
             <p>
               {{user.location}}
             </p>
@@ -85,9 +85,9 @@
             <p><b>Goals: </b>
               {{item.goals or ''}}
             </p>
-            <p><b>B: </b>{{boulder_levels[item.b_skill_level] or 'N/A'}} <b>TR:
-              </b>{{sport_levels[item.tr_skill_level] or 'N/A'}} <b>LD:
-              </b>{{sport_levels[item.ld_skill_level] or 'N/A'}}</p>
+            <p><b>B: </b>{{boulder_levels[item.b_skill_level | int] or 'N/A'}} <b>TR:
+              </b>{{sport_levels[item.tr_skill_level | int] or 'N/A'}} <b>LD:
+              </b>{{sport_levels[item.ld_skill_level | int] or 'N/A'}}</p>
             <p><b>Location: </b>
               {{item.location}}
             </p>
@@ -101,7 +101,7 @@
             <a href="/route/{{item.id}}">
               <h5>{{item.name}}</h5>
             </a <p><b>Route Type:</b> {{item.route_type}}</p>
-            <p><b>Difficulty:</b> {{item.difficulty}}</p>
+            <p><b>Difficulty:</b> {{boulder_levels[item.difficulty | int] if item.route_type == "Boulder" else sport_levels[item.difficulty | int]}}</p>
             <p><b>Stars:</b> {{item.stars}}</p>
             <p class="afterBtn"><b>Location</b> {{item.location}} {{item.location2 or ''}}</p>
             {% if item.id not in is_project and item.id not in is_send %}

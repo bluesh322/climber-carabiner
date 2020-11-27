@@ -56,9 +56,9 @@
             </a>
           </div>
           <div class="col-lg-6 col-md-6">
-            <p><b>B: </b>{{boulder_levels[followed_user.b_skill_level]}} -
-              <b>TR: </b>{{sport_levels[followed_user.tr_skill_level]}} -
-              <b>LD: </b>{{sport_levels[followed_user.ld_skill_level]}}</p>
+            <p><b>B: </b>{{boulder_levels[followed_user.b_skill_level | int]}} -
+              <b>TR: </b>{{sport_levels[followed_user.tr_skill_level | int]}} -
+              <b>LD: </b>{{sport_levels[followed_user.ld_skill_level | int]}}</p>
           </div>
           <div class="col-lg-2 col-md-2">
             <button id="disconnect-button" data-user-id="{{followed_user.id}}"

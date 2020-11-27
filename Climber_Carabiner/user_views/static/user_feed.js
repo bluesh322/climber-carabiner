@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(async function (position) {
             console.log(position);
-            $.get( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+ position.coords.latitude + "," + position.coords.longitude +"&sensor=false"+`&key=GOOGLEMAPSKEY`, async function(data) {
+            const res = await axios.get(`${BASE_URL}/mapskey`);
+            $.get( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+ position.coords.latitude + "," + position.coords.longitude +"&sensor=false"+`&key=${res.data}`, async function(data) {
                     console.log(data);
                     console.log(data.results[0].address_components[2].long_name);
                     console.log(data.results[0].address_components[4].long_name);

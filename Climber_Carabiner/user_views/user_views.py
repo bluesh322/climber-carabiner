@@ -28,8 +28,8 @@ user_views = Blueprint(
 @user_views.route('/user-feed')
 @login_required
 def show_user_feed():
-    b_levels = dict(boulder_levels)
-    s_levels = dict(sport_levels)
+    b_levels = boulder_levels
+    s_levels = sport_levels
     is_following = [follow.user_being_followed_id for follow in Follows.query.filter(
             Follows.user_following_id == current_user.id).all()]
     is_project = [project.route_id for project in Project.query.filter(Project.user_id == current_user.id).all()]
@@ -64,8 +64,8 @@ def show_user_feed():
 @user_views.route('/user/view-profile/<int:id>')
 @login_required
 def show_user_profile(id):
-    b_levels = dict(boulder_levels)
-    s_levels = dict(sport_levels)
+    b_levels = boulder_levels
+    s_levels = sport_levels
     if id == current_user.id:
         form=EditClimbInfo(obj=current_user)
 
@@ -102,10 +102,6 @@ def show_user_profile(id):
         projects = Project.query.filter(and_(Project.route_id.in_(proj_route_ids)), (Project.user_id == user.id)).all()
         sent_route_ids = [route.id for route in sent_routes]
         sends = Send.query.filter(and_((Send.route_id.in_(sent_route_ids)), (Send.user_id == user.id))).all()
-
-        print("***************************")
-        print(sends)
-        print(kudos)
 
         return render_template(
             'view_other_user_profile.html',
@@ -314,10 +310,10 @@ def add_kudo_to_send(send_id):
         return jsonify(msg="unliked")
     else:
         # like project
-        new_like = Kudos()
-        new_like.user_id = current_user.id
-        new_like.send_id = send_id
-        sess.add(new_like)
+        new_kudo = Kudos()
+        new_kudo.user_id = current_user.id
+        new_kudo.send_id = send_id
+        sess.add(new_kudo)
         sess.commit()
         return jsonify(msg="send kudo")
 
@@ -333,13 +329,15 @@ def show_connection_list(user_id):
 def show_project_list(user_id):
     """Show all the connections a user has"""
     user = User.query.get_or_404(user_id)
-    project_ids = [proj.route_id for proj in Project.query.filter(Project.user_id == user_id).all()]
-    routes = Route.query.filter(Route.id.in_(project_ids)).all()
+    routes = Project.query.filter(Project.user_id == user_id).all()
     likes = [like.project_id for like in Likes.query.filter(
             Likes.user_id == current_user.id).all()]
     route_ids = [route.id for route in routes]
-    projects = Project.query.filter(Project.route_id.in_(route_ids)).all()
-    return render_template('project_list.html', user=user, projected_routes=routes, likes=likes, projects=projects)
+    return render_template(
+        'project_list.html',
+        user=user, 
+        projected_routes=routes, 
+        likes=likes)
 
 @user_views.route('/user/sends_list/<int:user_id>', methods=["GET"])
 @login_required

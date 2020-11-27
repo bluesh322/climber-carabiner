@@ -18,14 +18,16 @@
           </div>
           <div class="col-8">
             <div class="card-text">
-              <p><b>B: </b>{{boulder_levels[current_user.b_skill_level]}} -
-                <b>TR: </b>{{sport_levels[current_user.tr_skill_level]}} -
-                <b>LD: </b>{{sport_levels[current_user.ld_skill_level]}}</p>
+              <p><b>B: </b>{{boulder_levels[current_user.b_skill_level | int]}} -
+                <b>TR: </b>{{sport_levels[current_user.tr_skill_level | int]}} -
+                <b>LD: </b>{{sport_levels[current_user.ld_skill_level | int]}}</p>
               <p>{{current_user.goals}}</p>
             </div>
           </div>
           <div class="col-2">
+            {% if current_user.id in followed_user %}
             <button id="user-connect-btn" data-route-id="{{user.id}}" class="btn btn-primary">Connect</button></a>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -39,9 +41,9 @@
     <h1>{{user.username}}</h1>
     <p><b>Location: </b>{{user.location}}</p>
     <h3>Skills</h3>
-    <p><b>Boudler: </b>{{boulder_levels[user.b_skill_level]}}</p>
-    <p><b>Top Rope: </b>{{sport_levels[user.tr_skill_level]}}</p>
-    <p><b>Lead: </b>{{sport_levels[user.ld_skill_level]}}</p>
+    <p><b>Boudler: </b>{{boulder_levels[user.b_skill_level | int]}}</p>
+    <p><b>Top Rope: </b>{{sport_levels[user.tr_skill_level | int]}}</p>
+    <p><b>Lead: </b>{{sport_levels[user.ld_skill_level | int]}}</p>
   </div>
   <div class="col-lg-8 col-md-12">
     <div class="row justify-content-start">
@@ -49,7 +51,7 @@
         <h5>Connection List ({{user.following | length}})</h5>
       </div>
       <div class="col-lg-2 col-md-2">
-        <a href="/user/connection_list/{{user.id}}">View All</a>
+        <a href="/user/connections_list/{{user.id}}">View All</a>
       </div>
     </div>
     <ul id="connection-list" class="list-group">
@@ -63,9 +65,9 @@
             </a>
           </div>
           <div class="col-lg-6 col-md-6">
-            <p><b>B: </b>{{boulder_levels[followed_user.b_skill_level]}} -
-              <b>TR: </b>{{sport_levels[followed_user.tr_skill_level]}} -
-              <b>LD: </b>{{sport_levels[followed_user.ld_skill_level]}}</p>
+            <p><b>B: </b>{{boulder_levels[followed_user.b_skill_level | int]}} -
+              <b>TR: </b>{{sport_levels[followed_user.tr_skill_level | int]}} -
+              <b>LD: </b>{{sport_levels[followed_user.ld_skill_level | int]}}</p>
           </div>
           {% if followed_user.id not in current_user.following and followed_user.id != current_user.id %}
           <div class="col-lg-2 col-md-2">
@@ -126,7 +128,7 @@
       <a href="/user/sends_list/{{user.id}}">View All</a>
     </div>
     </div>
-    <ul id="send-list" class="list-group">
+    <ul id="send-list" class="list-group mb-4">
       {% if sent_routes %}
       {% for s_route in sent_routes[:5] %}
       <li class="list-group-item list-group-item-action">

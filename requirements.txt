@@ -21,8 +21,10 @@ Flask-DebugToolbar==0.10.1
 Flask-Login==0.5.0
 Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.3.2
-Flask-WTF==0.14.2
+Flask-Uploads==0.2.1
+Flask-WTF==0.14.3
 GeoAlchemy2==0.8.4
+gunicorn==20.0.4
 idna==2.10
 ipython==7.18.1
 ipython-genutils==0.2.0

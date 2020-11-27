@@ -108,15 +108,15 @@ def list_routes_lat_lon():
     #coordinates for Austin TX
     lat = '30.2672'
     lon = '-97.7431'
-    maxDist = '100'
-    maxresults = '50'
+    maxDist = '200'
+    maxresults = '500'
     routes_res = requests.get(f'{BASE_URL}get-routes-for-lat-lon?lat={lat}&lon={lon}&maxDistance={maxDist}&maxResults={maxresults}&key={MP_KEY}')
     routes = json.loads(routes_res.text)
     routes_t = routes['routes']
     k = {}
     i = 0
     for route in routes_t:
-        Route.add_route(name=route['name'], difficulty=route['rating'], image_url=route['imgMedium'], stars=route['stars'], location=route['location'][0], location2=route['location'][1] or None, lat=route['latitude'], lon=route['longitude'], route_type=route['type'])
+        Route.add_route(mp_id = route['id'], name=route['name'], difficulty=route['rating'], image_url=route['imgMedium'], stars=route['stars'], location=route['location'][0], location2=route['location'][1] or None, lat=route['latitude'], lon=route['longitude'], route_type=route['type'])
         k.update(i = route['name'])
         ++i
     res = k
