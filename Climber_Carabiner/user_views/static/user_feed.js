@@ -3,9 +3,6 @@ const BASE_URL = "https://climbing-carabiner.herokuapp.com";
 
 document.addEventListener("DOMContentLoaded", async function () {
 
-    // const is_location = await axios.get(`${BASE_URL}/user/location`);
-    // console.log(is_location.data.res.location)
-    // if(is_location.data.res.location) {
     if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(async function (position) {
         console.log(position);
@@ -28,7 +25,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     else {
         console.log("Geolocation is not supported")
     }
-    // }
 
     $('#feed-list').on('click', "#project-route", async function (evt) {
         evt.preventDefault();

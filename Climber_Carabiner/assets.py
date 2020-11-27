@@ -53,6 +53,12 @@ def compile_assets(assets):
         filters='jsmin'
     )
 
+    location_js = Bundle(
+        'user_views/location.js',
+        output="gen/location.js",
+        filters="jsmin"
+    )
+
     assets.register('user_views_css_bundle', user_views_css_bundle)
     assets.register('search_js', search_js)
     assets.register('search_css', search_css)
@@ -61,6 +67,7 @@ def compile_assets(assets):
     assets.register('view_profile_js', view_profile_js)
     assets.register('route_details_js', route_details_js)
     assets.register('user_feed_js', user_feed_js)
+    assets.register('location_js', location_js)
     if app.config['FLASK_ENV'] == 'development':
         search_js.build()
         search_css.build()
@@ -69,4 +76,5 @@ def compile_assets(assets):
         view_profile_js.build()
         route_details_js.build()
         user_feed_js.build()
+        location_js.build()
     return assets

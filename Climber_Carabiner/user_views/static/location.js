@@ -1,0 +1,25 @@
+//const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://climbing-carabiner.herokuapp.com";
+
+document.addEventListener("DOMContentLoaded", async function () {
+
+    if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(async function (position) {
+        console.log(position);
+        const res = await axios.get(`${BASE_URL}/mapskey`);
+        $.get( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+ position.coords.latitude + "," + position.coords.longitude +"&sensor=false"+`&key=${res.data}`, async function(data) {
+                const set_location = await axios.post(`${BASE_URL}/user/location`, {
+                    'lat': position.coords.latitude,
+                    'lon': position.coords.longitude,
+                    'location': `${data.results[0].address_components[2].long_name}, ${data.results[0].address_components[4].long_name}`
+                })
+                console.log(set_location.data)
+            });
+    });
+    setTimeout(() => { window.location.replace(`${BASE_URL}/user-feed`);}, 3000);
+
+    } 
+    else {
+        console.log("Geolocation is not supported")
+    }
+});

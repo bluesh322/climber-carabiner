@@ -230,12 +230,18 @@ def add_sent_route(rt_id):
 def is_user_location():
     """Check if the user geo location set"""
     user_location = User.query.get_or_404(current_user.id)
-    if(user_location.geo):
-        res = {'location': False}
-        return jsonify(res=res)
+    print("************************")
+    print(user_location.lat)
+    print(user_location.lon)
+    print(user_location.geo)
+    if user_location.geo is not None:
+        print("********************")
+        print("STILL GOING HERE")
+        return redirect(url_for("user_views.show_user_feed"))
     else:
-        res = {'location': True}
-        return jsonify(res=res)
+        print("******************")
+        print("GOING HERE")
+        return render_template("location.html")
 
 @user_views.route('/user/location', methods=["POST"])
 @login_required

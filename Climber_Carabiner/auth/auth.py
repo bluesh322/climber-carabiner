@@ -59,7 +59,7 @@ def login_post():
             )
             return redirect(url_for("auth_bp.login"))
         login_user(user)
-    return redirect(url_for("user_views.show_user_feed"))
+    return redirect(url_for("user_views.is_user_location"))
 
 
 @auth_bp.route("/signup")
