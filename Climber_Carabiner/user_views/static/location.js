@@ -2,12 +2,12 @@
 const BASE_URL = "https://climbing-carabiner.herokuapp.com";
 
 document.addEventListener("DOMContentLoaded", function () {
-    $("#location").on("click", function (evt) {
+    $("#location").on("click", async function (evt) {
         evt.preventDefault()
         if(navigator.geolocation){
             navigator.permissions.query({
                 name: 'geolocation'
-            }).then( function(result) {
+            }).then( async function(result) {
                 if (result.state == 'granted') {
                     navigator.geolocation.getCurrentPosition(async function (position) {
                         console.log(position);
