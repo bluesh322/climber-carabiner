@@ -2,7 +2,7 @@
 const BASE_URL = "https://climbing-carabiner.herokuapp.com";
 
 document.addEventListener("DOMContentLoaded", function () {
-    $("#location").on("click", async function (evt) {
+    $("#location").on("click touchstart", async function (evt) {
         evt.preventDefault()
         if(navigator.geolocation){
             navigator.permissions.query({
