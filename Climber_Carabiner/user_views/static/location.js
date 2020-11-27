@@ -1,13 +1,13 @@
-const BASE_URL = "http://localhost:5000";
-//const BASE_URL = "https://climbing-carabiner.herokuapp.com";
+//const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://climbing-carabiner.herokuapp.com";
 
 document.addEventListener("DOMContentLoaded", function () {
-    $("#location").on("click", async function (evt) {
+    $("#location").on("click", function (evt) {
         evt.preventDefault()
         if(navigator.geolocation){
             navigator.permissions.query({
                 name: 'geolocation'
-            }).then(async function(result) {
+            }).then( function(result) {
                 if (result.state == 'granted') {
                     navigator.geolocation.getCurrentPosition(async function (position) {
                         console.log(position);
