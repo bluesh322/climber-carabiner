@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:5000";
+//const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://climbing-carabiner.herokuapp.com";
 
 document.addEventListener("DOMContentLoaded", async function () {
     $("#user-project-btn").on("click", async function (evt) {
