@@ -3,32 +3,32 @@ const BASE_URL = "https://climbing-carabiner.herokuapp.com";
 
 document.addEventListener("DOMContentLoaded", async function () {
 
-    const is_location = await axios.get(`${BASE_URL}/user/location`);
-    console.log(is_location.data.res.location)
-    if(is_location.data.res.location) {
-        if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(async function (position) {
-            console.log(position);
-            const res = await axios.get(`${BASE_URL}/mapskey`);
-            $.get( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+ position.coords.latitude + "," + position.coords.longitude +"&sensor=false"+`&key=${res.data}`, async function(data) {
-                    console.log(data);
-                    console.log(data.results[0].address_components[2].long_name);
-                    console.log(data.results[0].address_components[4].long_name);
-                    const set_location = await axios.post(`${BASE_URL}/user/location`, {
-                        'lat': position.coords.latitude,
-                        'lon': position.coords.longitude,
-                        'location': `${data.results[0].address_components[2].long_name}, ${data.results[0].address_components[4].long_name}`
-                    })
-                    console.log(set_location.data)
-                });
-        });
+    // const is_location = await axios.get(`${BASE_URL}/user/location`);
+    // console.log(is_location.data.res.location)
+    // if(is_location.data.res.location) {
+    if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(async function (position) {
+        console.log(position);
+        const res = await axios.get(`${BASE_URL}/mapskey`);
+        $.get( "https://maps.googleapis.com/maps/api/geocode/json?latlng="+ position.coords.latitude + "," + position.coords.longitude +"&sensor=false"+`&key=${res.data}`, async function(data) {
+                console.log(data);
+                console.log(data.results[0].address_components[2].long_name);
+                console.log(data.results[0].address_components[4].long_name);
+                const set_location = await axios.post(`${BASE_URL}/user/location`, {
+                    'lat': position.coords.latitude,
+                    'lon': position.coords.longitude,
+                    'location': `${data.results[0].address_components[2].long_name}, ${data.results[0].address_components[4].long_name}`
+                })
+                console.log(set_location.data)
+            });
+    });
 
 
-        } 
-        else {
-            console.log("Geolocation is not supported")
-        }
+    } 
+    else {
+        console.log("Geolocation is not supported")
     }
+    // }
 
     $('#feed-list').on('click', "#project-route", async function (evt) {
         evt.preventDefault();
