@@ -113,7 +113,7 @@ def list_routes_lat_lon():
 
     maxDist = '200'
     maxresults = '500'
-    routes_res = requests.get(f'{BASE_URL}get-routes-for-lat-lon?lat={lat[9]}&lon={lon[9]}&maxDistance={maxDist}&maxResults={maxresults}&key={MP_KEY}')
+    routes_res = requests.get(f'{BASE_URL}get-routes-for-lat-lon?lat={lat[14]}&lon={lon[14]}&maxDistance={maxDist}&maxResults={maxresults}&key={MP_KEY}')
     routes = json.loads(routes_res.text)
     print(routes)
     routes_t = routes['routes']
