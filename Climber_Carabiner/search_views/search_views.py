@@ -64,9 +64,9 @@ def submit_search():
             return jsonify(routes=all_routes)
         else: 
             if not search:
-                routes = Route.query.filter(func.ST_DistanceSphere(Route.geo, geo) < (1000*1609.344)).order_by(func.ST_DistanceSphere(Route.geo, geo)).limit(100).all()
+                routes = Route.query.all()
             else:
-                routes = Route.query.filter(and_(Route.name.ilike(f"%{search}%")), (func.ST_DistanceSphere(Route.geo, geo) < (1000*1609.344))).order_by(func.ST_DistanceSphere(Route.geo, geo)).limit(100).all()
+                routes = Route.query.filter((Route.name.ilike(f"%{search}%"))).all()
             all_routes = [route.serialize() for route in routes]
             return jsonify(routes=all_routes)
     else:
@@ -79,7 +79,7 @@ def submit_search():
             return jsonify(users=all_users)
         else:
             if not search:
-                users = User.query.filter(func.ST_DistanceSphere(User.geo, geo) < (1000*1609.344)).order_by(desc(func.ST_DistanceSphere(User.geo, geo))).limit(50).all()
+                users = User.query.filter(func.ST_DistanceSphere(User.geo, geo) < (1000*1609.344)).order_by(func.ST_DistanceSphere(User.geo, geo)).limit(50).all()
             else:
                 users = User.query.filter(and_(User.username.ilike(f"%{search}%"), (func.ST_DistanceSphere(User.geo, geo) < (1000*1609.344)))).order_by(func.ST_DistanceSphere(User.geo, geo)).all()
             all_users = [user.serialize() for user in users]
@@ -95,7 +95,7 @@ def get_user_location():
 def update_map():
     lat = current_user.lat
     lon = current_user.lon
-    routes = Route.get_routes_within_radius(lat, lon, 5)
+    routes = Route.get_routes_within_radius(lat, lon, 50)
     all_routes = [route.serialize() for route in routes]
     return jsonify(routes=all_routes)
 
@@ -105,7 +105,7 @@ def update_map_on_bounds_change():
     center = request.json['center']
     lat = center['lat']
     lon = center['lng']
-    routes = Route.get_routes_within_radius(lat, lon, 5)
+    routes = Route.get_routes_within_radius(lat, lon, 50)
     all_routes =  [route.serialize() for route in routes]
     return jsonify(routes=all_routes)
 
