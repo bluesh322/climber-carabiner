@@ -9,16 +9,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             }).then(function(result) {
                 if (result.state == 'granted') {
                     alert(result.state);
-                    geoBtn.style.display = 'none';
                     
                 } else if (result.state == 'prompt') {
                     alert(result.state);
-                    geoBtn.style.display = 'none';
            
                     navigator.geolocation.getCurrentPosition(revealPosition, positionDenied, geoSettings);
                 } else if (result.state == 'denied') {
                     alert(result.state);
-                    geoBtn.style.display = 'inline';
                 }
                 result.onchange = function() {
                     alert(result.state);
