@@ -79,9 +79,9 @@ def submit_search():
             return jsonify(users=all_users)
         else:
             if not search:
-                users = User.query.filter(func.ST_DistanceSphere(User.geo, geo) < (1000*1609.344)).order_by(func.ST_DistanceSphere(User.geo, geo)).limit(50).all()
+                users = User.query.limit(50).all()
             else:
-                users = User.query.filter(and_(User.username.ilike(f"%{search}%"), (func.ST_DistanceSphere(User.geo, geo) < (1000*1609.344)))).order_by(func.ST_DistanceSphere(User.geo, geo)).all()
+                users = User.query.filter((User.username.ilike(f"%{search}%")).order_by(func.ST_DistanceSphere(User.geo, geo)).all()
             all_users = [user.serialize() for user in users]
             return jsonify(users=all_users)
 

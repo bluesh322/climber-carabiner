@@ -106,11 +106,14 @@ def list_routes():
 def list_routes_lat_lon():
     """"""
     #coordinates for Austin TX
-    lat = '30.2672'
-    lon = '-97.7431'
+    lat = ['32.7767', '30.2672', '31.7619', '31.3113', '34.7465', '32.2988', '28.5309', '33.7984', '35.2026', '36.1627', '35.4676', '35.0844', '33.4484', '36.1699',
+    '34.0522', '38.5816', '39.7392', '40.7608', '39.1911', '37.8651', '45.5051', '47.6062']
+    lon = ['-96.7970', '-97.7431', '-106.4850', '-92.4451', '-92.2896', '-90.1848', '-81.3776', '-89.1476', '-80.8341', '-86.7816', '-97.5164', '-106.6504', '-112.0740', '-115.1398'
+    '-118.2437', '-121.4944', '-104.9903', '-111.8910', '-106.8175', '-119.5383', '-122.6750', '-122.3321']
+
     maxDist = '200'
     maxresults = '500'
-    routes_res = requests.get(f'{BASE_URL}get-routes-for-lat-lon?lat={lat}&lon={lon}&maxDistance={maxDist}&maxResults={maxresults}&key={MP_KEY}')
+    routes_res = requests.get(f'{BASE_URL}get-routes-for-lat-lon?lat={lat[2]}&lon={lon[2]}&maxDistance={maxDist}&maxResults={maxresults}&key={MP_KEY}')
     routes = json.loads(routes_res.text)
     print(routes)
     routes_t = routes['routes']

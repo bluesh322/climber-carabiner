@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .append(`<li id="${userData.id}" class="list-group-item list-group-item-action">
       <div class="row justify-content-between">
         <div class="col-lg-3 col-md-3">
-        <a href="/user/${userData.id}">${userData.username}</a>
+        <a href="/user/view-profile/${userData.id}">${userData.username}</a>
         </div>
         <div class="col-lg-1 col-md-1 p-0">
           <p><b>B: </b> ${boulder_levels[userData.b_skill_level]}</p>
