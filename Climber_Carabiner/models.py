@@ -496,7 +496,7 @@ class Route(db.Model):
                 difficulty = difficulty[0:4]
                 difficulty = difficulty.strip()
                 if difficulty in sport_levels:
-                    new_route.difficulty = boulder_levels.index(difficulty)
+                    new_route.difficulty = sport_levels.index(difficulty)
                 else:
                     new_route.difficulty = 0
         db.session.add(new_route)
