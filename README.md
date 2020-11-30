@@ -4,7 +4,7 @@
 
 # climbing-carabiner.herokuapp.com
 
-[Link](https://www.climbing-carabiner.herokuapp.com)
+[Link](https://climbing-carabiner.herokuapp.com/)
 
 ## What is the purpose of my website?
 
