@@ -84,6 +84,8 @@ def add_user():
             flash("Username already taken.")
             return redirect(url_for("auth_bp.signup"))
         new_user = User.signup(username=username, email=email, password=password)
+        if new_user == False:
+            return redirect(url_for('index_bp.index'))
         sess.commit()
         token = generate_confirmation_token(new_user.email)
         confirm_url = url_for("auth_bp.confirm_email", token=token, _external=True)

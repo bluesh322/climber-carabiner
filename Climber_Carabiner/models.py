@@ -6,6 +6,8 @@ from flask_login import LoginManager, UserMixin
 from geoalchemy2 import Geometry
 from sqlalchemy import func, asc
 import datetime, re
+from flask import redirect
+from better-profanity import profranity
 
 
 bcrypt = Bcrypt()
@@ -327,6 +329,10 @@ class User(UserMixin, db.Model):
         """
 
         hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        if profanity.contains_profanity(username) or profanity.contains_profanity(email):
+            return False
+
 
         user = User(
             username=username,
