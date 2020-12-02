@@ -7,7 +7,7 @@ from geoalchemy2 import Geometry
 from sqlalchemy import func, asc
 import datetime, re
 from flask import redirect
-from better-profanity import profranity
+from better-profanity import profanity
 
 
 bcrypt = Bcrypt()
