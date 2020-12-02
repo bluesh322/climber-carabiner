@@ -80,8 +80,6 @@ def submit_search():
         else:
             if not search:
                 users = User.query.filter(and_((User.confirmed == True), (User.geo != None))).limit(50).all()
-                print("******************")
-                print(users[0].confirmed)
             else:
                 users = User.query.filter(and_((User.username.ilike(f"%{search}%")), (User.confirmed == True), (User.geo != None))).order_by(func.ST_DistanceSphere(User.geo, geo)).all()
             all_users = [user.serialize() for user in users]
