@@ -1,3 +1,17 @@
+# How to start app
+
+python -m venv venv --- create virtual environment so you don't globally grab python libraries.
+
+source venv/Scripts/activate --- sets your env to venv
+
+pip install -r requirements.txt
+
+need postgres with postGIS installed.
+
+python -m flask run
+
+change all base_urls in js files to localhost and not heroku.
+
 # 7/23 Update
 
 ## Currently Under Construction
