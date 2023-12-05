@@ -1,3 +1,21 @@
+# How to start app
+
+python -m venv venv --- create virtual environment so you don't globally grab python libraries.
+
+source venv/Scripts/activate --- sets your env to venv
+
+pip install -r requirements.txt
+
+need postgres with postGIS installed.
+
+python -m flask run
+
+change all base_urls in js files to localhost and not heroku.
+
+# 7/23 Update
+
+## Currently Under Construction
+
 # Climber-Carabiner
 
 [Proposal link](https://docs.google.com/document/d/14DqRuug4R3GVKoXW3sr0nLj0K2qU7WWp4MPSYB37G10/edit?usp=sharing)
